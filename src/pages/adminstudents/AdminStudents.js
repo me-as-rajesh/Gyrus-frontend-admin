@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AdminStudents.module.css';
 
-const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
 const AdminStudents = () => {
   const [students, setStudents] = useState([]);

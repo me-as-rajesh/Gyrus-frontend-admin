@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com//api/otp';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com/api/otp';
 
 // Validate Indian phone number (10 digits, starting with 6-9)
 const validatePhoneNumber = (phoneNumber) => {

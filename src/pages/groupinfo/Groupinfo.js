@@ -13,7 +13,7 @@ const GroupPage = () => {
   const [group, setGroup] = useState(location.state?.groupData || null);
   const [loading, setLoading] = useState(!location.state?.groupData);
   const [error, setError] = useState(null);
-  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/';
+  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
   useEffect(() => {
     if (location.state?.groupData) return;

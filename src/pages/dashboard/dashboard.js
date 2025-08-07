@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './dashboard.css';
 
-const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
 const Dashboard = () => {
   const [cardsData, setCardsData] = useState([
