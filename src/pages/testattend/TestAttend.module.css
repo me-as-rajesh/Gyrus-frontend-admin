@@ -1,0 +1,104 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.testHeader {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.testHeader h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.testInfo {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.questionContainer {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.questionNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.questionNav button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.questionNav button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.questionCard {
+    margin-bottom: 30px;
+}
+
+.questionCard h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.options {
+    margin-top: 20px;
+}
+
+.option {
+    margin: 10px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option:hover {
+    background: #e9ecef;
+}
+
+.option input {
+    margin-right: 10px;
+}
+
+.submitSection {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.submitButton {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+    background-color: #219653;
+}

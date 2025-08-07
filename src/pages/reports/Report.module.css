@@ -1,0 +1,277 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .backButton {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    color: #3498db;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .backButton:hover {
+    background-color: #f0f7ff;
+  }
+  
+  .title {
+    margin-left: 20px;
+    font-size: 24px;
+    color: #2c3e50;
+  }
+  
+  .groupSelector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .groupButton {
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .groupButton.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+  }
+  
+  .reportContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+  }
+  
+  .pieChartContainer, .studentList {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sectionTitle {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  
+  .chartWrapper {
+    width: 100%;
+    height: 300px;
+  }
+  
+  .studentTable {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .studentRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .studentName {
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  .resultButton {
+    padding: 6px 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .resultButton:hover {
+    background-color: #2980b9;
+  }
+  
+  @media (max-width: 768px) {
+    .reportContent {
+      grid-template-columns: 1fr;
+    }
+  }
+  /* Previous styles remain the same... */
+
+/* Add these new styles for the modal */
+.resultModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.resultModalContent {
+  background-color: white;
+  border-radius: 8px;
+  padding: 25px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7f8c8d;
+  padding: 5px;
+}
+
+.closeButton:hover {
+  color: #2c3e50;
+}
+
+.studentName {
+  color: #2c3e50;
+  margin-top: 0;
+  font-size: 22px;
+  padding-right: 30px;
+}
+
+.groupName {
+  color: #7f8c8d;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.resultDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.resultCard {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  border-left: 4px solid #3498db;
+}
+
+.resultCard h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.resultCard p {
+  margin: 5px 0;
+  color: #34495e;
+}
+
+@media (max-width: 600px) {
+  .resultModalContent {
+    width: 90%;
+    padding: 20px 15px;
+  }
+  
+  .resultDetails {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dropdown Styles */
+.groupSelectorContainer {
+  margin: 20px 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+.customDropdown {
+  position: relative;
+  width: 100%;
+}
+
+.groupDropdown {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.groupDropdown:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.dropdownIcon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
+}
+
+/* For modern browsers */
+.groupDropdown::-ms-expand {
+  display: none;
+}
+
+/* Hover effect */
+.groupDropdown:hover {
+  border-color: #bbb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .groupSelectorContainer {
+      max-width: 100%;
+  }
+  
+  .groupDropdown {
+      padding: 10px 14px;
+      font-size: 14px;
+  }
+}

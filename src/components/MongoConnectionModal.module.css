@@ -1,0 +1,24 @@
+.formGroup {
+    margin-bottom: 20px;
+  }
+  
+  .connectionStatus {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  .success {
+    background-color: #e6ffed;
+    color: #2d7738;
+  }
+  
+  .error {
+    background-color: #ffe6e6;
+    color: #d73a49;
+  }
+  
+  .connecting {
+    background-color: #e6f3ff;
+    color: #0366d6;
+  }

@@ -1,0 +1,19 @@
+.footer {
+  background: #4b53e4;
+  color: #fff;
+  padding: 16px 0;
+  text-align: center;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.text {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}

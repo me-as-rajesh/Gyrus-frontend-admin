@@ -1,0 +1,136 @@
+.profileContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+    padding: 20px;
+  }
+  
+  .profileCard {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+  }
+  
+  .profileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .profileHeader h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .editButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .editButton:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .profileContent {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+  }
+  
+  @media (min-width: 768px) {
+    .profileContent {
+      flex-direction: row;
+      gap: 40px;
+    }
+  }
+  
+  .profileImageContainer {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .profileImage {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #f0f0f0;
+  }
+  
+  .profileImagePlaceholder {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #e0e6ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7f8c8d;
+    border: 5px solid #f0f0f0;
+  }
+  
+  .profileDetails {
+    flex-grow: 1;
+  }
+  
+  .detailItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .detailItem:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .detailIcon {
+    color: #3498db;
+    flex-shrink: 0;
+  }
+  
+  .detailLabel {
+    font-weight: 600;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .detailValue {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .loading,
+  .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+  }
+  
+  .error {
+    color: #e74c3c;
+  }

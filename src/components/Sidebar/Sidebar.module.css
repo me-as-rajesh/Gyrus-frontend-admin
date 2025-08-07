@@ -1,0 +1,277 @@
+/* Sidebar.module.css */
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f7fa;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  transition: all 0.3s;
+  height: 100vh;
+  position: fixed;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.open {
+  width: 250px;
+}
+
+/* Profile Section - Vertical Block Layout */
+.sidebarHeader {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.sidebarHeader:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.profileButton {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 3px solid #e0e6ed;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.profileButton:hover {
+  transform: scale(1.05);
+  border-color: #3498db;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profilePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #e0e6ed;
+}
+
+.placeholderIcon {
+  color: #7f8c8d;
+  width: 40px;
+  height: 40px;
+}
+
+.teacherInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.teacherName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.teacherEmail {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+/* Rest of the sidebar styles */
+.nav {
+  padding: 15px 0;
+  flex-grow: 1;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.navLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navLink.active {
+  background-color: #3498db;
+}
+
+.icon {
+  margin-right: 10px;
+  width: 20px;
+  color: white;
+}
+
+.sectionTitle {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.groupSection {
+  margin: 15px 0;
+}
+
+.groupLink {
+  display: block;
+  padding: 10px 20px 10px 40px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.groupLink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.groupLink.active {
+  background-color: rgba(52, 152, 219, 0.3);
+  border-left: 3px solid #3498db;
+}
+
+.mongoStatus {
+  padding: 10px 15px;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+}
+
+.statusIndicator {
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.connected {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.disconnected {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+.statusIndicator:hover {
+  opacity: 0.8;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+    overflow: hidden;
+  }
+
+  .sidebar.open {
+    width: 250px;
+    z-index: 1000;
+  }
+
+  /* Profile section in mobile */
+  .sidebarHeader {
+    padding: 15px 10px;
+    gap: 8px;
+  }
+  
+  .profileButton {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .placeholderIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .teacherName, 
+  .teacherEmail {
+    display: none;
+  }
+
+  .sidebar.open .teacherName,
+  .sidebar.open .teacherEmail {
+    display: block;
+  }
+
+  .navLink span,
+  .sectionTitle,
+  .groupLink {
+    display: none;
+  }
+
+  .sidebar.open .navLink span,
+  .sidebar.open .sectionTitle,
+  .sidebar.open .groupLink {
+    display: block;
+  }
+
+  .navLink {
+    justify-content: center;
+    padding: 15px 0;
+  }
+
+  .sidebar.open .navLink {
+    justify-content: flex-start;
+    padding: 12px 20px;
+  }
+
+  .icon {
+    margin-right: 0;
+  }
+
+  .sidebar.open .icon {
+    margin-right: 10px;
+  }
+
+  .mainContent {
+    margin-left: 70px;
+  }
+}
+
