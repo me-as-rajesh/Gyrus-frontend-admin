@@ -1,4 +1,4 @@
-const EXPRESS_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/student';
+const EXPRESS_API_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com//api/student';
 
 export const loginStudent = async (name, regNo) => {
   try {

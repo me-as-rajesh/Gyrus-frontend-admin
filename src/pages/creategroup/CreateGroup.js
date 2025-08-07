@@ -20,7 +20,7 @@ const CreateGroup = () => {
   const classOptions = ['11', '12'];
   const maxStudents = 20;
 
-  const API_BASE_URL = 'http://localhost:5000';
+  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/';
   const getTeacherData = () => {
     const teacher = JSON.parse(localStorage.getItem('teacherProfile'));
     if (!teacher || !teacher.email) {

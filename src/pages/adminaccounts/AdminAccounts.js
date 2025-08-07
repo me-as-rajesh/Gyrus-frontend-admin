@@ -17,7 +17,7 @@ import {
   faUser
 } from '@fortawesome/free-solid-svg-icons';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/';
 
 function AdminAccounts() {
   const [admins, setAdmins] = useState([]);
