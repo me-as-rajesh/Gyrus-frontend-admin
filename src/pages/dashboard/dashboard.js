@@ -208,7 +208,7 @@ const Dashboard = () => {
           <button>🔍</button>
         </div>
         <div className="user-profile">
-          <a href="http://localhost:3000/student/login">👨‍🎓 Student</a>
+          <a href={`/student/login`}>👨‍🎓 Student</a>
         </div>
       </div>
 

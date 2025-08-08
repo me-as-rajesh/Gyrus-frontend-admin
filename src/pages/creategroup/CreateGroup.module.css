@@ -264,3 +264,50 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+
+.successAlert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #2ecc71;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.errorText {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #fdecea;
+  border-radius: 4px;
+  border-left: 3px solid #e74c3c;
+}

@@ -16,6 +16,7 @@ const CreateGroup = () => {
   const [createdGroup, setCreatedGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
   const classOptions = ['11', '12'];
   const maxStudents = 20;
@@ -58,7 +59,6 @@ const CreateGroup = () => {
       const teacher = getTeacherData();
       if (!teacher) return;
 
-      // Validate at least one student
       const validStudents = students.filter(s => s.name.trim() && s.regNo.trim());
       if (validStudents.length === 0) {
         throw new Error('Please add at least one student');
@@ -67,7 +67,7 @@ const CreateGroup = () => {
       const newGroup = {
         groupName: groupName.trim(),
         section: classSection,
-        teacherEmail: teacher.email, // Using email instead of _id
+        teacherEmail: teacher.email,
         students: validStudents,
         maxStudents
       };
@@ -79,6 +79,7 @@ const CreateGroup = () => {
         totalStudents: response.data.students.length
       });
       setIsCreated(true);
+      setShowAlert(true);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -86,9 +87,22 @@ const CreateGroup = () => {
     }
   };
 
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showAlert]);
 
   return (
     <div className={styles.container}>
+      {showAlert && (
+        <div className={styles.successAlert}>
+          Group created successfully!
+        </div>
+      )}
       <div className={styles.header}>
         <h2>Create Group</h2>
       </div>
