@@ -38,8 +38,23 @@ const Dashboard = () => {
         }
 
         // Set welcome message and school name
-        setWelcomeMessage(`Welcome back, ${teacherProfile.name || 'Teacher'}!`);
-        setSchoolName(`School Name: ${teacherProfile.school || 'Unknown School'}`);
+        // Option 1: Use teacherProfile from localStorage (as current)
+        // setWelcomeMessage(`Welcome back, ${teacherProfile.name || 'Teacher'}!`);
+        // setSchoolName(`School Name: ${teacherProfile.school || 'Unknown School'}`);
+
+        // Option 2: Fetch teacher profile from backend (if available)
+        // Uncomment below if you have an endpoint like /api/teachers/profile/:email
+        
+        const profileResponse = await fetch(`${API_BASE_URL}/api/teachers/profile/${teacherProfile.email}`);
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          setWelcomeMessage(`Welcome back, ${profileData.name || 'Teacher'}!`);
+          setSchoolName(`School Name: ${profileData.school || 'Unknown School'}`);
+        } else {
+          setWelcomeMessage(`Welcome back, ${teacherProfile.name || 'Teacher'}!`);
+          setSchoolName(`School Name: ${teacherProfile.school || 'Unknown School'}`);
+        }
+        
 
         // Fetch groups and students data
         const groupsResponse = await fetch(`${API_BASE_URL}/api/groups/teacher/${teacherProfile.email}`);
