@@ -1,8 +1,8 @@
-const EXPRESS_API_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com/api/student';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com/api/student';
 
 export const loginStudent = async (name, regNo) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

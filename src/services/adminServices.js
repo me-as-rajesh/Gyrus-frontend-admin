@@ -1,8 +1,8 @@
-const EXPRESS_API_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com/api/admin';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com/api/admin';
 
 export const loginAdmin = async (username, password) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export const clearAdminSession = () => {
 
 export const getAdmins = async () => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/admins`, {
+    const response = await fetch(`${API_BASE_URL}/admins`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

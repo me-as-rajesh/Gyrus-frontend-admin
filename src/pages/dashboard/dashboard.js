@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './dashboard.css';
 
-const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://gyrus-backend-admin.onrender.com';
 
 const Dashboard = () => {
   const [cardsData, setCardsData] = useState([
@@ -19,85 +19,76 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedGroups, setExpandedGroups] = useState({});
 
-  const quickLinksData = [
-    { name: 'NEET Syllabus', icon: '📑', url: `${API_BASE_URL}/api/questions/all-questions` },
-    { name: 'Previous Papers', icon: '📂', url: `${API_BASE_URL}/api/questions/all-questions` },
-    { name: 'Study Groups', icon: '👥', url: `${API_BASE_URL}/api/groups` },
-    { name: 'Mock Tests', icon: '🧪', url: `${API_BASE_URL}/api/tests` },
-    { name: 'Revision Notes', icon: '📝', url: `${API_BASE_URL}/api/questions/all-questions` },
-    { name: 'Doubt Forum', icon: '💬', url: '#' }
-  ];
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const teacherProfile = JSON.parse(localStorage.getItem('teacherProfile'));
+        const teacherProfile = JSON.parse(localStorage.getItem('teacherProfile') || '{}');
         if (!teacherProfile?.email) {
+          console.error('Teacher profile missing or invalid in localStorage:', teacherProfile);
           throw new Error('Teacher email not found');
         }
 
-        // Set welcome message and school name
-        // Option 1: Use teacherProfile from localStorage (as current)
-        // setWelcomeMessage(`Welcome back, ${teacherProfile.name || 'Teacher'}!`);
-        // setSchoolName(`School Name: ${teacherProfile.school || 'Unknown School'}`);
+        setWelcomeMessage(`Welcome back, ${teacherProfile.name || 'Teacher'}!`);
+        setSchoolName(`School Name: ${teacherProfile.school || 'Unknown School'}`);
 
-        // Option 2: Fetch teacher profile from backend (if available)
-        // Uncomment below if you have an endpoint like /api/teachers/profile/:email
-        
-        const profileResponse = await fetch(`${API_BASE_URL}/api/teachers/profile/${teacherProfile.email}`);
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
-          setWelcomeMessage(`Welcome back, ${profileData.name || 'Teacher'}!`);
-          setSchoolName(`School Name: ${profileData.school || 'Unknown School'}`);
-        } else {
-          setWelcomeMessage(`Welcome back, ${teacherProfile.name || 'Teacher'}!`);
-          setSchoolName(`School Name: ${teacherProfile.school || 'Unknown School'}`);
+        const groupsResponse = await fetch(`${API_BASE_URL}/api/groups/teacher/${teacherProfile.email}`, {
+          headers: {
+            'Authorization': `Bearer ${teacherProfile.token || ''}`
+          }
+        });
+        if (!groupsResponse.ok) {
+          throw new Error(`Failed to fetch groups: ${groupsResponse.statusText}`);
         }
-        
-
-        // Fetch groups and students data
-        const groupsResponse = await fetch(`${API_BASE_URL}/api/groups/teacher/${teacherProfile.email}`);
         const groups = await groupsResponse.json();
-        const totalGroups = groups.length;
-        const totalStudents = groups.reduce((sum, group) => sum + (group.studentCount || group.students.length), 0);
+        const totalGroups = groups.length || 0;
+        const totalStudents = groups.reduce((sum, group) => sum + (group.studentCount || group.students?.length || 0), 0);
 
-        // Fetch all tests for the teacher
-        const testsResponse = await fetch(`${API_BASE_URL}/api/tests/teacher-tests/${teacherProfile.email}`);
-        const allTests = await testsResponse.json();
-        const totalTests = allTests.length;
-
-        // Calculate upcoming and finished tests
-        const now = new Date();
-        const upcomingTests = allTests.filter(test => {
-          const testDate = new Date(test.date);
-          const testTime = test.time.split(':');
-          testDate.setHours(testTime[0], testTime[1]);
-          return testDate > now;
-        });
-
-        const finishedTests = allTests.filter(test => {
-          const testDate = new Date(test.date);
-          const testTime = test.time.split(':');
-          testDate.setHours(testTime[0], testTime[1]);
-          return testDate <= now;
-        });
-
-        // Initialize tests by group with all groups, storing test names
-        const groupedTests = {};
+        let totalTests = 0;
+        let upcomingTests = [];
+        let finishedTests = [];
+        let allTests = [];
+        let groupedTests = {};
         groups.forEach(group => {
           groupedTests[group.groupName] = [];
         });
 
-        // Map tests to groups
-        allTests.forEach(test => {
-          const groupName = groups.find(g => g._id === test.groupId)?.groupName || 'Unknown';
-          if (groupName !== 'Unknown') {
-            groupedTests[groupName].push(test.testName);
-          }
-        });
+        if (totalGroups > 0) {
+          const testsResponse = await fetch(`${API_BASE_URL}/api/tests/teacher-tests/${teacherProfile.email}`, {
+            headers: {
+              'Authorization': `Bearer ${teacherProfile.token || ''}`
+            }
+          });
+          if (!testsResponse.ok) {
+            console.warn(`Tests fetch failed: ${testsResponse.statusText}. Proceeding with default test values.`);
+          } else {
+            allTests = await testsResponse.json();
+            totalTests = allTests.length || 0;
 
-        // Update recent activities based on test data
+            const now = new Date();
+            upcomingTests = allTests.filter(test => {
+              const testDate = new Date(test.date);
+              const testTime = test.time?.split(':') || ['00', '00'];
+              testDate.setHours(testTime[0], testTime[1]);
+              return testDate > now;
+            });
+
+            finishedTests = allTests.filter(test => {
+              const testDate = new Date(test.date);
+              const testTime = test.time?.split(':') || ['00', '00'];
+              testDate.setHours(testTime[0], testTime[1]);
+              return testDate <= now;
+            });
+
+            allTests.forEach(test => {
+              const groupName = groups.find(g => g._id === test.groupId)?.groupName || 'Unknown';
+              if (groupName !== 'Unknown') {
+                groupedTests[groupName].push(test.testName);
+              }
+            });
+          }
+        }
+
         const activities = allTests
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .slice(0, 4)
@@ -125,7 +116,6 @@ const Dashboard = () => {
           });
         setRecentActivities(activities);
 
-        // Update cards data
         setCardsData([
           {
             id: 1,
@@ -169,10 +159,8 @@ const Dashboard = () => {
           }
         ]);
 
-        // Update tests by group
         setTestsByGroup(groupedTests);
 
-        // Initialize expanded state for all groups
         const initialExpanded = {};
         Object.keys(groupedTests).forEach(group => {
           initialExpanded[group] = false;
@@ -180,11 +168,16 @@ const Dashboard = () => {
         setExpandedGroups(initialExpanded);
 
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setWelcomeMessage('Welcome back! Error loading data.');
-        setSchoolName('Error loading school');
+        console.error('Error fetching data:', error.message);
+        const teacherProfile = JSON.parse(localStorage.getItem('teacherProfile') || '{}');
+        if (teacherProfile?.name && teacherProfile?.school) {
+          setWelcomeMessage(`Welcome back, ${teacherProfile.name}!`);
+          setSchoolName(`School Name: ${teacherProfile.school}`);
+        } else {
+          setWelcomeMessage('Welcome back! Error loading data.');
+          setSchoolName('Error loading school');
+        }
         setRecentActivities([]);
-        setCardsData(cardsData.map(card => ({ ...card, value: 'Error', change: 'Failed to load' })));
         setTestsByGroup({});
         setExpandedGroups({});
       } finally {
@@ -194,7 +187,6 @@ const Dashboard = () => {
 
     fetchData();
 
-    // Card animation
     const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
       setTimeout(() => {
@@ -246,18 +238,6 @@ const Dashboard = () => {
         </div>
 
         <div className="panels-container">
-          <div className="panel quick-links">
-            <h3>Quick Links</h3>
-            <ul>
-              {quickLinksData.map((link, index) => (
-                <li key={index} className="quick-link-item">
-                  <span className="link-icon">{link.icon}</span>
-                  <a href={link.url}>{link.name}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           <div className="panel recent-activity">
             <h3>Recent Activity</h3>
             <ul>

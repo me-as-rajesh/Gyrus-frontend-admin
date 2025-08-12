@@ -1,9 +1,9 @@
-const EXPRESS_API_URL = 'https://gyrus-backend-admin.onrender.com/api/teachers';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/api/teachers';
 
 // Save teacher profile join request to MongoDB via Express backend
 export const saveTeacherJoinRequest = async (teacherData) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/join-request`, {
+    const response = await fetch(`${API_BASE_URL}/join-request`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const saveTeacherJoinRequest = async (teacherData) => {
 // Get all pending teacher join requests
 export const getPendingJoinRequests = async () => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/join-requests/pending`);
+    const response = await fetch(`${API_BASE_URL}/join-requests/pending`);
     if (!response.ok) throw new Error('Failed to fetch pending join requests');
     return await response.json();
   } catch (error) {
@@ -42,7 +42,7 @@ export const getPendingJoinRequests = async () => {
 // Approve or reject teacher join request
 export const updateJoinRequestStatus = async (id, status) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/join-requests/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/join-requests/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const updateJoinRequestStatus = async (id, status) => {
 // Verify teacher credentials for sign-in
 export const verifyTeacherCredentials = async (email, password) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export const verifyTeacherCredentials = async (email, password) => {
 // Get teacher profile from MongoDB via Express backend
 export const getTeacherProfile = async (email) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/email/${encodeURIComponent(email)}`);
+    const response = await fetch(`${API_BASE_URL}/email/${encodeURIComponent(email)}`);
     
     if (response.status === 404) return null;
     if (!response.ok) throw new Error('Failed to fetch teacher profile');
@@ -121,7 +121,7 @@ export const checkExistingProfile = async (email) => {
 // Update teacher profile
 export const updateTeacherProfile = async (id, updateData) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ export const updateTeacherProfile = async (id, updateData) => {
 // Delete teacher profile
 export const deleteTeacherProfile = async (id) => {
   try {
-    const response = await fetch(`${EXPRESS_API_URL}/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: 'DELETE'
     });
 
@@ -162,7 +162,7 @@ export const deleteTeacherProfile = async (id) => {
 // Save teacher profile to MongoDB via Express backend (for backward compatibility)
 export const saveTeacherProfile = async (teacherData) => {
   try {
-    const response = await fetch(EXPRESS_API_URL, {
+    const response = await fetch(API_BASE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
