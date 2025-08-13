@@ -1,6 +1,6 @@
 .container {
   max-width: 1200px;
-    min-height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 20px;
   background-color: white;
@@ -33,19 +33,60 @@
   background-color: #f0f7ff;
 }
 
-.contentWrapper {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 30px;
-}
-
 .formSection {
   padding: 15px;
-  border-right: 1px solid #eee;
 }
 
 .studentSection {
   padding: 15px;
+}
+
+.studentSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.importButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  transition: all 0.3s;
+}
+
+.importButton:hover {
+  background-color: #2980b9;
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  border: 1px solid #adb5bd;
+  transition: all 0.3s;
+}
+
+.exportButton:hover {
+  background-color: #e9ecef;
 }
 
 h2, h3 {
@@ -64,10 +105,18 @@ h3 {
   gap: 20px;
 }
 
+.formRow {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
 .formGroup {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .formGroup label {
@@ -92,6 +141,7 @@ h3 {
   text-align: center;
   font-weight: 500;
   color: #2c3e50;
+  margin-top: 20px;
 }
 
 .studentList {
@@ -118,36 +168,8 @@ h3 {
 .studentInputs {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
-}
-
-.removeButton {
-  background: none;
-  border: none;
-  color: #e74c3c;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0 5px;
-  line-height: 1;
-}
-
-.addButton {
-  background-color: #f8f9fa;
-  border: 1px dashed #adb5bd;
-  color: #495057;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: all 0.3s;
-  width: 100%;
-  text-align: center;
-}
-
-.addButton:hover {
-  background-color: #e9ecef;
-  border-color: #6c757d;
 }
 
 .submitButton {
@@ -171,7 +193,6 @@ h3 {
   background-color: #27ae60;
 }
 
-/* Group Card Styles */
 .groupCardContainer {
   max-width: 1200px;
   margin: 0 auto;
@@ -249,22 +270,40 @@ h3 {
   background-color: #fdecea;
 }
 
+@media (max-width: 1200px) {
+  .studentInputs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .formRow {
+    flex-direction: column;
+  }
+
+  .formGroup {
+    min-width: 100%;
+  }
+
   .contentWrapper {
     grid-template-columns: 1fr;
   }
 
-  .formSection {
-    border-right: none;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 25px;
+  .studentSectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .buttonGroup {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .studentInputs {
     grid-template-columns: 1fr;
   }
 }
-
 
 .successAlert {
   position: fixed;

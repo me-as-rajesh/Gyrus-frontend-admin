@@ -9,6 +9,7 @@
   flex: 1;
   padding: 20px;
   background-color: #f5f7fa;
+  transition: margin-left 0.3s;
 }
 
 .sidebar {
@@ -25,6 +26,38 @@
 
 .sidebar.open {
   width: 250px;
+}
+
+.sidebar.hidden {
+  width: 0;
+  overflow: hidden;
+}
+
+/* Toggle Button */
+.toggleButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  transition: all 0.3s;
+}
+
+.toggleButton:hover {
+  background-color: #2980b9;
+}
+
+.toggleIcon {
+  width: 20px;
+  height: 20px;
 }
 
 /* Profile Section - Vertical Block Layout */
@@ -203,34 +236,62 @@
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .sidebar.hidden {
+    width: 0;
+  }
+
+  .mainContent {
+    margin-left: 250px;
+  }
+
+  .sidebar.hidden ~ .mainContent {
+    margin-left: 0;
+  }
+
+  .toggleButton {
+    left: 250px;
+  }
+
+  .sidebar.hidden + .toggleButton {
+    left: 10px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 641px) {
   .sidebar {
     width: 70px;
-    overflow: hidden;
   }
 
   .sidebar.open {
-    width: 250px;
+    width: 220px;
     z-index: 1000;
   }
 
-  /* Profile section in mobile */
+  .sidebar.hidden {
+    width: 0;
+  }
+
   .sidebarHeader {
     padding: 15px 10px;
     gap: 8px;
   }
-  
+
   .profileButton {
     width: 50px;
     height: 50px;
   }
-  
+
   .placeholderIcon {
     width: 24px;
     height: 24px;
   }
 
-  .teacherName, 
+  .teacherName,
   .teacherEmail {
     display: none;
   }
@@ -273,5 +334,93 @@
   .mainContent {
     margin-left: 70px;
   }
+
+  .sidebar.hidden ~ .mainContent {
+    margin-left: 0;
+  }
+
+  .toggleButton {
+    left: 70px;
+  }
+
+  .sidebar.hidden + .toggleButton {
+    left: 10px;
+  }
 }
 
+@media (max-width: 640px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .sidebar.open {
+    width: 200px;
+    z-index: 1000;
+  }
+
+  .sidebar.hidden {
+    width: 0;
+  }
+
+  .sidebarHeader {
+    padding: 12px 8px;
+    gap: 6px;
+  }
+
+  .profileButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .placeholderIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .teacherName {
+    font-size: 16px;
+  }
+
+  .teacherEmail {
+    font-size: 12px;
+  }
+
+  .navLink {
+    padding: 12px 0;
+  }
+
+  .sidebar.open .navLink {
+    padding: 10px 16px;
+  }
+
+  .groupLink {
+    padding: 8px 16px 8px 32px;
+  }
+
+  .sectionTitle {
+    font-size: 0.8rem;
+  }
+
+  .mainContent {
+    margin-left: 60px;
+    padding: 15px;
+  }
+
+  .sidebar.hidden ~ .mainContent {
+    margin-left: 0;
+  }
+
+  .toggleButton {
+    left: 60px;
+    padding: 6px;
+  }
+
+  .toggleIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sidebar.hidden + .toggleButton {
+    left: 10px;
+  }
+}
