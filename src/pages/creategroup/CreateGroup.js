@@ -35,11 +35,43 @@ const CreateGroup = () => {
   };
 
   const handleStudentCountChange = (e) => {
-    const count = Math.max(minStudents, Math.min(maxStudents, Number(e.target.value) || 1));
-    setStudentCount(count);
-    setStudents(
-      Array(count).fill().map((_, i) => students[i] || { name: '', regNo: '', email: '', gender: '', dob: '' })
+    const newCount = Number(e.target.value) || 0;
+    const hasData = students.some(student => 
+      student.name.trim() || student.regNo.trim() || student.email.trim() || student.gender || student.dob
     );
+    const emptyRows = students.filter(student => !student.name.trim() && !student.regNo.trim() && !student.email.trim() && !student.gender && !student.dob);
+
+    if (newCount === 0) {
+      if (window.confirm('Are you sure you want to clear all student data?')) {
+        setStudentCount(0);
+        setStudents([]);
+      } else {
+        e.target.value = studentCount;
+        return;
+      }
+    } else {
+      const count = Math.max(minStudents, Math.min(maxStudents, newCount));
+      if (count < studentCount) {
+        const filledRows = students.filter(student => student.name.trim());
+        const rowsToRemove = studentCount - count;
+        if (rowsToRemove > emptyRows.length && hasData) {
+          if (!window.confirm('Are you sure you want to remove the data?')) {
+            e.target.value = studentCount;
+            return;
+          }
+        }
+        const newStudents = students.slice(0, count).map((student, i) => 
+          filledRows[i] || { name: '', regNo: '', email: '', gender: '', dob: '' }
+        );
+        setStudents(newStudents);
+      } else {
+        setStudentCount(count);
+        setStudents(
+          Array(count).fill().map((_, i) => students[i] || { name: '', regNo: '', email: '', gender: '', dob: '' })
+        );
+      }
+      setStudentCount(count);
+    }
   };
 
   const handleStudentChange = (index, field, value) => {
@@ -131,6 +163,15 @@ const CreateGroup = () => {
         throw new Error('Please add at least one student with all required fields');
       }
 
+      // Check for missing or duplicate entries
+      const missingEntries = students.some(s => !s.name.trim() || !s.regNo.trim() || !s.email.trim() || !s.gender || !s.dob);
+      const regNos = students.map(s => s.regNo.trim());
+      const duplicateEntries = regNos.some((regNo, index) => regNo && regNos.indexOf(regNo) !== index);
+      if (missingEntries || duplicateEntries) {
+        setError('Error: Missing or duplicate student entries detected. Please correct before submitting.');
+        return;
+      }
+
       const newGroup = {
         groupName: groupName.trim(),
         class: classValue,
@@ -220,15 +261,6 @@ const CreateGroup = () => {
             <div className={styles.studentCounter}>
               Students added: {students.filter(s => s.name && s.regNo && s.email && s.gender && s.dob).length} / {maxStudents}
             </div>
-
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={isLoading}
-            >
-              <Check size={18} /> {isLoading ? 'Creating...' : 'Create now'}
-            </button>
-            {error && <p className={styles.errorText}>{error}</p>}
           </div>
         </form>
       </div>
@@ -311,6 +343,13 @@ const CreateGroup = () => {
               </div>
             </div>
           ))}
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={isLoading}
+          >
+            <Check size={18} /> {isLoading ? 'Creating...' : 'Create now'}
+          </button>
         </div>
       </div>
 
@@ -320,6 +359,7 @@ const CreateGroup = () => {
           Group created successfully!
         </div>
       )}
+      {error && <p className={styles.errorText}>{error}</p>}
     </div>
   );
 };

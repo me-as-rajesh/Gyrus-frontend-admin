@@ -111,7 +111,7 @@ const Sidebar = () => {
                       isActive ? `${styles.groupLink} ${styles.active}` : styles.groupLink
                     }
                   >
-                    {group.groupName} ({group.section})
+                    {group.groupName} ({group.class} - {group.section})
                   </NavLink>
                 ))}
               </>
