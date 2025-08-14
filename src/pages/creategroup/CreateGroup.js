@@ -8,7 +8,8 @@ import Papa from 'papaparse';
 const CreateGroup = () => {
   const navigate = useNavigate();
   const [groupName, setGroupName] = useState('');
-  const [classSection, setClassSection] = useState('11');
+  const [classValue, setClassValue] = useState('11');
+  const [section, setSection] = useState('A');
   const [studentCount, setStudentCount] = useState(1);
   const [students, setStudents] = useState([{ name: '', regNo: '', email: '', gender: '', dob: '' }]);
   const [isCreated, setIsCreated] = useState(false);
@@ -18,6 +19,7 @@ const CreateGroup = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   const classOptions = ['11', '12'];
+  const sectionOptions = Array.from({length: 26}, (_, i) => String.fromCharCode(65 + i));
   const genderOptions = ['Male', 'Female', 'Other'];
   const maxStudents = 100;
   const minStudents = 1;
@@ -131,7 +133,8 @@ const CreateGroup = () => {
 
       const newGroup = {
         groupName: groupName.trim(),
-        section: classSection,
+        class: classValue,
+        section,
         teacherEmail: teacher.email,
         students: validStudents,
         maxStudents
@@ -174,14 +177,28 @@ const CreateGroup = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="classSection">Class and Section</label>
+              <label htmlFor="classValue">Class</label>
               <select
-                id="classSection"
-                value={classSection}
-                onChange={(e) => setClassSection(e.target.value)}
+                id="classValue"
+                value={classValue}
+                onChange={(e) => setClassValue(e.target.value)}
                 required
               >
                 {classOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="section">Section</label>
+              <select
+                id="section"
+                value={section}
+                onChange={(e) => setSection(e.target.value)}
+                required
+              >
+                {sectionOptions.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
