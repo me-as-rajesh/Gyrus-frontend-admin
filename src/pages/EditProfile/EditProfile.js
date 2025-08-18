@@ -14,13 +14,20 @@ const EditProfile = () => {
     dob: '',
     department: '',
     school: '',
-    profileImage: ''
   });
 
   useEffect(() => {
     const existingProfile = location.state?.profile || JSON.parse(localStorage.getItem('teacherProfile'));
     if (existingProfile) {
-      setProfile(existingProfile);
+      setProfile({
+        _id: existingProfile._id,
+        name: existingProfile.name,
+        email: existingProfile.email,
+        phone: existingProfile.phone || '',
+        dob: existingProfile.dob ? new Date(existingProfile.dob).toISOString().split('T')[0] : '',
+        department: existingProfile.department,
+        school: existingProfile.school || '',
+      });
     } else {
       navigate('/profile');
     }
@@ -53,7 +60,7 @@ const EditProfile = () => {
         <h2>Edit Teacher Profile</h2>
 
         <label>Name:</label>
-        <input name="name" value={profile.name} onChange={handleChange} />
+        <input name="name" value={profile.name} onChange={handleChange} required />
 
         <label>Email (readonly):</label>
         <input name="email" value={profile.email} readOnly />
@@ -62,16 +69,13 @@ const EditProfile = () => {
         <input name="phone" value={profile.phone} onChange={handleChange} />
 
         <label>Date of Birth:</label>
-        <input name="dob" type="date" value={profile.dob} onChange={handleChange} />
+        <input name="dob" type="date" value={profile.dob} onChange={handleChange} max={new Date().toISOString().split('T')[0]} />
 
         <label>Department:</label>
-        <input name="department" value={profile.department} onChange={handleChange} />
+        <input name="department" value={profile.department} onChange={handleChange} required />
 
         <label>School:</label>
         <input name="school" value={profile.school} onChange={handleChange} />
-
-        <label>Profile Image URL:</label>
-        <input name="profileImage" value={profile.profileImage} onChange={handleChange} />
 
         <button onClick={handleSave} className={styles.saveButton}>Save Profile</button>
       </div>

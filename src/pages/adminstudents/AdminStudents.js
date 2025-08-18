@@ -14,12 +14,14 @@ const AdminStudents = () => {
       .then(data => {
         const formattedStudents = data.map((student, index) => ({
           id: index + 1,
-          name: student.name,
-          regNo: student.regNo,
-          class: student.section,
-          email: 'test@gmail.com',
-          groupId: student.groupId,
-          groupName: student.groupName
+          name: student.name || '-',
+          regNo: student.regNo || '-',
+          class: student.class || student.section || '-',
+          email: student.email || '-',
+          gender: student.gender || '-',
+          dob: student.dob ? new Date(student.dob).toLocaleDateString() : '-',
+          groupId: student.groupId || '-',
+          groupName: student.groupName || '-'
         }));
         setStudents(formattedStudents);
       })
@@ -58,6 +60,8 @@ const AdminStudents = () => {
             <th>Reg No</th>
             <th>Class</th>
             <th>Email</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
           </tr>
         </thead>
         <tbody>
@@ -68,13 +72,15 @@ const AdminStudents = () => {
               <td>{student.regNo}</td>
               <td>{student.class}</td>
               <td>{student.email}</td>
+              <td>{student.gender}</td>
+              <td>{student.dob}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
       {selectedStudent && (
-        <div className={styles.popup} onClick={closePopup}>
+        <div className={styles.popup}>
           <div className={styles['popup-content']}>
             <h2>Student Details</h2>
             <p><strong>ID:</strong> {selectedStudent.id}</p>
@@ -82,6 +88,8 @@ const AdminStudents = () => {
             <p><strong>Reg No:</strong> {selectedStudent.regNo}</p>
             <p><strong>Class:</strong> {selectedStudent.class}</p>
             <p><strong>Email:</strong> {selectedStudent.email}</p>
+            <p><strong>Gender:</strong> {selectedStudent.gender}</p>
+            <p><strong>Date of Birth:</strong> {selectedStudent.dob}</p>
             <p><strong>Group ID:</strong> {selectedStudent.groupId}</p>
             <p><strong>Group Name:</strong> {selectedStudent.groupName}</p>
             <button onClick={closePopup} className={styles['close-button']}>Close</button>

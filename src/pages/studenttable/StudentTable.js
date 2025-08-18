@@ -52,6 +52,48 @@ const StudentTable = () => {
         return group ? group.students : [];
     };
 
+    // Format date of birth
+    const formatDate = (dateString) => {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
+    // Export to CSV
+    const exportToCSV = () => {
+        const students = getActiveGroupStudents();
+        if (!students.length) return;
+
+        const group = groups.find(g => g._id === activeGroup);
+        const headers = ['#', 'Name', 'Register No', 'Email', 'Gender', 'Date of Birth'];
+        const rows = students.map((student, idx) => [
+            idx + 1,
+            `"${student.name}"`,
+            student.registerNo || student.regNo || '-',
+            student.email || '-',
+            student.gender || '-',
+            formatDate(student.dob)
+        ]);
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const groupName = group?.groupName?.replace(/[^a-zA-Z0-9]/g, '_') || 'students';
+        link.setAttribute('href', URL.createObjectURL(blob));
+        link.setAttribute('download', `${groupName}_students.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     if (loading) {
         return (
             <div className={styles.container}>
@@ -97,6 +139,13 @@ const StudentTable = () => {
                     </select>
                     <ChevronDown className={styles.dropdownIcon} />
                 </div>
+                <button 
+                    className={styles.exportButton}
+                    onClick={exportToCSV}
+                    disabled={!getActiveGroupStudents().length}
+                >
+                    Export to CSV
+                </button>
             </div>
             
             <div className={styles.studentTable}>
@@ -118,6 +167,9 @@ const StudentTable = () => {
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Register No</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>Date of Birth</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -126,6 +178,9 @@ const StudentTable = () => {
                                     <td>{idx + 1}</td>
                                     <td>{student.name}</td>
                                     <td>{student.registerNo || student.regNo}</td>
+                                    <td>{student.email || '-'}</td>
+                                    <td>{student.gender || '-'}</td>
+                                    <td>{formatDate(student.dob)}</td>
                                 </tr>
                             ))}
                         </tbody>

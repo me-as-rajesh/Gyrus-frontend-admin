@@ -41,6 +41,11 @@ const Profile = () => {
     navigate('/edit-profile', { state: { profile } });
   };
 
+  // Get the first letter of the email for the avatar
+  const getAvatarLetter = () => {
+    return profile?.email ? profile.email.charAt(0).toUpperCase() : 'T';
+  };
+
   if (loading) {
     return <div className={styles.loading}>Loading profile...</div>;
   }
@@ -65,17 +70,9 @@ const Profile = () => {
 
         <div className={styles.profileContent}>
           <div className={styles.profileImageContainer}>
-            {profile.profileImage ? (
-              <img 
-                src={profile.profileImage} 
-                alt="Profile" 
-                className={styles.profileImage}
-              />
-            ) : (
-              <div className={styles.profileImagePlaceholder}>
-                <User size={48} />
-              </div>
-            )}
+            <div className={styles.profileImagePlaceholder}>
+              <span className={styles.avatarLetter}>{getAvatarLetter()}</span>
+            </div>
           </div>
 
           <div className={styles.profileDetails}>

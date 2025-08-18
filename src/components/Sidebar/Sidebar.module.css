@@ -96,12 +96,6 @@
   border-color: #3498db;
 }
 
-.profileImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .profilePlaceholder {
   display: flex;
   align-items: center;
@@ -111,10 +105,10 @@
   background-color: #e0e6ed;
 }
 
-.placeholderIcon {
-  color: #7f8c8d;
-  width: 40px;
-  height: 40px;
+.avatarLetter {
+  font-size: 36px;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
 .teacherInfo {
@@ -286,9 +280,8 @@
     height: 50px;
   }
 
-  .placeholderIcon {
-    width: 24px;
-    height: 24px;
+  .avatarLetter {
+    font-size: 24px;
   }
 
   .teacherName,
@@ -372,9 +365,8 @@
     height: 40px;
   }
 
-  .placeholderIcon {
-    width: 20px;
-    height: 20px;
+  .avatarLetter {
+    font-size: 20px;
   }
 
   .teacherName {

@@ -51,6 +51,11 @@ const Sidebar = () => {
     setIsOpen(true); // Reset to open state when showing sidebar
   };
 
+  // Get the first letter of the email for the avatar
+  const getAvatarLetter = () => {
+    return teacherData.email ? teacherData.email.charAt(0).toUpperCase() : 'T';
+  };
+
   return (
     <>
       <button
@@ -72,13 +77,9 @@ const Sidebar = () => {
               toggleSidebar();
             }}
           >
-            {teacherData.profileImage ? (
-              <img src={teacherData.profileImage} alt="Profile" className={styles.profileImage} />
-            ) : (
-              <div className={styles.profilePlaceholder}>
-                <User size={20} className={styles.placeholderIcon} />
-              </div>
-            )}
+            <div className={styles.profilePlaceholder}>
+              <span className={styles.avatarLetter}>{getAvatarLetter()}</span>
+            </div>
           </div>
           {isOpen && (
             <div className={styles.teacherInfo}>

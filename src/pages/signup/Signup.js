@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlusCircle, User, Mail, Calendar, BookOpen, Lock, Phone, School } from 'lucide-react';
+import { User, Mail, Calendar, BookOpen, Lock, Phone, School } from 'lucide-react';
 import { saveTeacherJoinRequest } from '../../services/mongoDbService';
 import styles from './Signup.module.css';
 
@@ -14,9 +14,7 @@ const Signup = () => {
     password: '',
     phone: '',
     school: '',
-    profileImage: null
   });
-  const [previewImage, setPreviewImage] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -27,32 +25,6 @@ const Signup = () => {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.match('image.*')) {
-      setError('Please select an image file');
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      setError('Image size should be less than 2MB');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-      setTeacherData(prev => ({
-        ...prev,
-        profileImage: reader.result
-      }));
-      setError('');
-    };
-    reader.readAsDataURL(file);
   };
 
   const validateForm = () => {
@@ -112,7 +84,6 @@ const Signup = () => {
         password: teacherData.password,
         phone: teacherData.phone,
         school: teacherData.school,
-        profileImage: teacherData.profileImage
       };
 
       // Save join request to MongoDB
@@ -139,28 +110,6 @@ const Signup = () => {
 
       <form onSubmit={handleSubmit} className={styles.loginForm}>
         {error && <div className={styles.errorMessage}>{error}</div>}
-
-        <div className={styles.profileImageContainer}>
-          <div className={styles.imageWrapper}>
-            {previewImage ? (
-              <img src={previewImage} alt="Profile" className={styles.profileImage} />
-            ) : (
-              <div className={styles.profilePlaceholder}>
-                <User size={48} className={styles.placeholderIcon} />
-              </div>
-            )}
-          </div>
-          <label className={styles.uploadButton}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className={styles.fileInput}
-            />
-            <PlusCircle size={20} className={styles.plusIcon} />
-            Upload Photo
-          </label>
-        </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="name">
