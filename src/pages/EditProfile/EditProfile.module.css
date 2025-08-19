@@ -16,6 +16,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  align-items: center;
 }
 
 .editCard h2 {
@@ -27,6 +28,7 @@
 .editCard label {
   font-weight: 500;
   color: #555;
+  align-self: flex-start;
 }
 
 .editCard input {
@@ -34,6 +36,7 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
+  width: 100%;
 }
 
 .editCard input[readonly] {
@@ -51,10 +54,33 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
+  width: 100%;
 }
 
 .saveButton:hover {
   background-color: #0056b3;
+}
+
+.avatarContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.avatarPlaceholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #3498db;
+}
+
+.avatarLetter {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 /* Responsive styles */
@@ -77,6 +103,15 @@
     padding: 10px;
     font-size: 14px;
   }
+
+  .avatarPlaceholder {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatarLetter {
+    font-size: 24px;
+  }
 }
 
 @media (max-width: 1023px) and (min-width: 641px) {
@@ -90,5 +125,14 @@
 
   .editCard input {
     font-size: 13px;
+  }
+
+  .avatarPlaceholder {
+    width: 70px;
+    height: 70px;
+  }
+
+  .avatarLetter {
+    font-size: 28px;
   }
 }

@@ -5,6 +5,17 @@ import styles from './AdminTeachers.module.css';
 
 const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
+// Utility function to generate a consistent random color based on email
+const getRandomColor = (email) => {
+  if (!email) return '#e0e6ed';
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
+  return `hsl(${hue}, 50%, 60%)`;
+};
+
 const AdminTeachers = () => {
   const [requests, setRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -119,6 +130,11 @@ const AdminTeachers = () => {
     setSearchQuery(e.target.value);
   };
 
+  // Get the first letter of the email for the avatar
+  const getAvatarLetter = (email) => {
+    return email ? email.charAt(0).toUpperCase() : 'T';
+  };
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Teacher Account Management</h1>
@@ -132,19 +148,13 @@ const AdminTeachers = () => {
           className={styles.searchInput}
         />
       </div>
-      {error && <div className={styles.errorMessage}>{error}</div>}
+
       <div className={styles.tabContainer}>
         <button
           className={`${styles.tab} ${activeTab === 'pending' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('pending')}
         >
-          Pending
-        </button>
-        <button
-          className={`${styles.tab} ${activeTab === 'approvedRejected' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('approvedRejected')}
-        >
-          Approved/Rejected
+          Pending Requests
         </button>
         <button
           className={`${styles.tab} ${activeTab === 'all' ? styles.activeTab : ''}`}
@@ -152,65 +162,73 @@ const AdminTeachers = () => {
         >
           All Teachers
         </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'approvedRejected' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('approvedRejected')}
+        >
+          Approved/Rejected
+        </button>
       </div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
+
+      {isLoading && <div className={styles.loading}>Loading...</div>}
+      {error && <div className={styles.errorMessage}>{error}</div>}
+
+      {!isLoading && filteredRequests.length === 0 && (
+        <div className={styles.noResults}>No {activeTab === 'pending' ? 'pending requests' : 'teachers'} found</div>
+      )}
+
+      {!isLoading && filteredRequests.length > 0 && (
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Date of Birth</th>
                 <th>Department</th>
-                <th>Phone</th>
                 <th>School</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length === 0 ? (
-                <tr><td colSpan="8">No requests found</td></tr>
-              ) : (
-                filteredRequests.map(request => (
-                  <tr key={request._id} onClick={() => openModal(request)} className={styles.tableRow}>
-                    <td>{request.name}</td>
-                    <td>{request.email}</td>
-                    <td>{new Date(request.dob).toLocaleDateString()}</td>
-                    <td>{request.department}</td>
-                    <td>{request.phone || 'Not provided'}</td>
-                    <td>{request.school || 'Not provided'}</td>
-                    <td>{request.status}</td>
-                    <td className={styles.actionButtons}>
-                      {request.status === 'pending' ? (
-                        <>
-                          <button
-                            className={styles.approveButton}
-                            onClick={(e) => { e.stopPropagation(); handleAccept(request._id); }}
-                          >
-                            Approve
-                          </button>
-                          <button
-                            className={styles.rejectButton}
-                            onClick={(e) => { e.stopPropagation(); openDeleteModal(request); }}
-                          >
-                            Reject
-                          </button>
-                        </>
-                      ) : (
+              {filteredRequests.map((request) => (
+                <tr
+                  key={request._id}
+                  className={styles.tableRow}
+                  onClick={() => openModal(request)}
+                >
+                  <td>{request.name}</td>
+                  <td>{request.email}</td>
+                  <td>{request.department}</td>
+                  <td>{request.school || 'Not provided'}</td>
+                  <td>{request.status}</td>
+                  <td className={styles.actionButtons}>
+                    {request.status === 'pending' ? (
+                      <>
                         <button
-                          className={styles.deleteButton}
+                          className={styles.approveButton}
+                          onClick={(e) => { e.stopPropagation(); handleAccept(request._id); }}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className={styles.rejectButton}
                           onClick={(e) => { e.stopPropagation(); openDeleteModal(request); }}
                         >
-                          Delete
+                          Reject
                         </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
+                      </>
+                    ) : (
+                      <button
+                        className={styles.deleteButton}
+                        onClick={(e) => { e.stopPropagation(); openDeleteModal(request); }}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -218,15 +236,16 @@ const AdminTeachers = () => {
 
       {isModalOpen && selectedTeacher && (
         <div className={styles.modal} onClick={closeModal}>
-          <div className={styles.modalContent}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <span className={styles.close} onClick={closeModal}>×</span>
             <h2 className={styles.modalTitle}>{selectedTeacher.name}</h2>
-            <div className={styles.profileImage}>
-              {selectedTeacher.profileImage ? (
-                <img src={selectedTeacher.profileImage} alt="Profile" className={styles.profileImage} />
-              ) : (
-                <div className={styles.profilePlaceholder}>No Image</div>
-              )}
+            <div className={styles.profileImageContainer}>
+              <div
+                className={styles.profilePlaceholder}
+                style={{ backgroundColor: getRandomColor(selectedTeacher.email) }}
+              >
+                <span className={styles.avatarLetter}>{getAvatarLetter(selectedTeacher.email)}</span>
+              </div>
             </div>
             <p><strong>Email:</strong> {selectedTeacher.email}</p>
             <p><strong>Date of Birth:</strong> {new Date(selectedTeacher.dob).toLocaleDateString()}</p>
@@ -265,7 +284,7 @@ const AdminTeachers = () => {
 
       {isDeleteModalOpen && selectedTeacher && (
         <div className={styles.modal}>
-          <div className={styles.modalContent}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <span className={styles.close} onClick={closeDeleteModal}>×</span>
             <h2 className={styles.modalTitle}>Confirm Deletion</h2>
             <p>Please type <strong>Delete</strong> to confirm deletion of {selectedTeacher.name}'s record.</p>

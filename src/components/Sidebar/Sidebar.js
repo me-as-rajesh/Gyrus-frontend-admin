@@ -3,6 +3,17 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { User, LayoutDashboard, ChevronRight, ChevronLeft } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
+// Utility function to generate a consistent random color based on email
+const getRandomColor = (email) => {
+  if (!email) return '#e0e6ed';
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
+  return `hsl(${hue}, 50%, 60%)`;
+};
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isHidden, setIsHidden] = useState(false);
@@ -12,7 +23,6 @@ const Sidebar = () => {
   const [teacherData, setTeacherData] = useState({
     name: '',
     email: '',
-    profileImage: null,
   });
   const navigate = useNavigate();
   const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
@@ -77,7 +87,7 @@ const Sidebar = () => {
               toggleSidebar();
             }}
           >
-            <div className={styles.profilePlaceholder}>
+            <div className={styles.profilePlaceholder} style={{ backgroundColor: getRandomColor(teacherData.email) }}>
               <span className={styles.avatarLetter}>{getAvatarLetter()}</span>
             </div>
           </div>

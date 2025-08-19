@@ -4,6 +4,17 @@ import { User, Mail, Calendar, BookOpen, Edit, School, Phone } from 'lucide-reac
 import { getTeacherProfile } from '../../services/mongoDbService';
 import styles from './Profile.module.css';
 
+// Utility function to generate a consistent random color based on email
+const getRandomColor = (email) => {
+  if (!email) return '#e0e6ed';
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
+  return `hsl(${hue}, 50%, 60%)`;
+};
+
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +25,6 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // Get email either from location state or from wherever you stored it
         const email = location.state?.email || localStorage.getItem('teacherEmail');
         if (!email) {
           navigate('/dashboard');
@@ -41,7 +51,6 @@ const Profile = () => {
     navigate('/edit-profile', { state: { profile } });
   };
 
-  // Get the first letter of the email for the avatar
   const getAvatarLetter = () => {
     return profile?.email ? profile.email.charAt(0).toUpperCase() : 'T';
   };
@@ -70,7 +79,7 @@ const Profile = () => {
 
         <div className={styles.profileContent}>
           <div className={styles.profileImageContainer}>
-            <div className={styles.profileImagePlaceholder}>
+            <div className={styles.profileImagePlaceholder} style={{ backgroundColor: getRandomColor(profile.email) }}>
               <span className={styles.avatarLetter}>{getAvatarLetter()}</span>
             </div>
           </div>

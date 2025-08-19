@@ -3,6 +3,17 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './EditProfile.module.css';
 import { updateTeacherProfile } from '../../services/mongoDbService';
 
+// Utility function to generate a consistent random color based on email
+const getRandomColor = (email) => {
+  if (!email) return '#e0e6ed';
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
+  return `hsl(${hue}, 50%, 60%)`;
+};
+
 const EditProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,9 +65,19 @@ const EditProfile = () => {
     }
   };
 
+  // Get the first letter of the email for the avatar
+  const getAvatarLetter = () => {
+    return profile.email ? profile.email.charAt(0).toUpperCase() : 'T';
+  };
+
   return (
     <div className={styles.editContainer}>
       <div className={styles.editCard}>
+        <div className={styles.avatarContainer}>
+          <div className={styles.avatarPlaceholder} style={{ backgroundColor: getRandomColor(profile.email) }}>
+            <span className={styles.avatarLetter}>{getAvatarLetter()}</span>
+          </div>
+        </div>
         <h2>Edit Teacher Profile</h2>
 
         <label>Name:</label>
