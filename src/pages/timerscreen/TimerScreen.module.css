@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #d1cfcf;
+  font-family: Arial, sans-serif;
+}
+
+.timerDisplay {
+  text-align: center;
+}
+
+.progressCircle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.timerText {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.doneText {
+  font-size: 18px;
+  color: red;
+  margin-top: 10px;
+}

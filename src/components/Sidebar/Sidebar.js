@@ -25,7 +25,7 @@ const Sidebar = () => {
     email: '',
   });
   const navigate = useNavigate();
-  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+  const API_BASE_URL = 'http://localhost:5000';
 
   useEffect(() => {
     const savedData = localStorage.getItem('teacherProfile');

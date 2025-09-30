@@ -8,16 +8,34 @@ const AdminContact = () => {
     message: '',
   });
 
+  const [status, setStatus] = useState('');
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add logic for form submission (e.g., API call) here
-    setFormData({ name: '', email: '', message: '' });
+    setStatus('Sending...');
+    try {
+      const response = await fetch("http://localhost:5000/api/fetch/contact-admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      setStatus(data.message);
+
+      if (data.success) {
+        setFormData({ name: '', email: '', message: '' });
+      }
+    } catch (error) {
+      setStatus("Error sending message!");
+    }
   };
 
   return (
@@ -25,9 +43,7 @@ const AdminContact = () => {
       <h1 className={styles.title}>Contact Admin</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
-          <label htmlFor="name" className={styles.label}>
-            Name
-          </label>
+          <label htmlFor="name" className={styles.label}>Name</label>
           <input
             type="text"
             id="name"
@@ -39,9 +55,7 @@ const AdminContact = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="email" className={styles.label}>
-            Email
-          </label>
+          <label htmlFor="email" className={styles.label}>Email</label>
           <input
             type="email"
             id="email"
@@ -53,9 +67,7 @@ const AdminContact = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="message" className={styles.label}>
-            Message
-          </label>
+          <label htmlFor="message" className={styles.label}>Message</label>
           <textarea
             id="message"
             name="message"
@@ -66,10 +78,9 @@ const AdminContact = () => {
             required
           ></textarea>
         </div>
-        <button type="submit" className={styles.button}>
-          Submit
-        </button>
+        <button type="submit" className={styles.button}>Submit</button>
       </form>
+      {status && <p className={styles.status}>{status}</p>}
     </div>
   );
 };
