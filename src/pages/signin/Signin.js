@@ -1,3 +1,4 @@
+// Signin.js (updated)
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { verifyTeacherCredentials } from '../../services/mongoDbService';
@@ -32,15 +33,14 @@ const Signin = () => {
     setIsLoading(true);
 
     try {
-      const isValid = await verifyTeacherCredentials(formData.email, formData.password);
-      if (isValid) {
-        navigate('/');
-      } else {
-        setError('Invalid email or password');
+      const result = await verifyTeacherCredentials(formData.email, formData.password);
+      if (result.success) {
+        // OTP sent, navigate to OTP verification page with email
+        navigate('/email-verify', { state: { email: result.email } });
       }
     } catch (err) {
       console.error('Login failed:', err);
-      setError('Failed to sign in. Please try again.');
+      setError(err.message || 'Failed to sign in. Please try again.');
     } finally {
       setIsLoading(false);
     }

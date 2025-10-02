@@ -62,7 +62,7 @@ export const updateJoinRequestStatus = async (id, status) => {
   }
 };
 
-// Verify teacher credentials for sign-in
+// Verify teacher credentials for sign-in (now handles OTP send)
 export const verifyTeacherCredentials = async (email, password) => {
   try {
     const response = await fetch(`${API_BASE_URL}/login`, {
@@ -79,15 +79,38 @@ export const verifyTeacherCredentials = async (email, password) => {
     }
 
     const data = await response.json();
-    if (data.status !== 'approved') {
-      throw new Error('Account is not approved');
-    }
-
-    localStorage.setItem('teacherProfile', JSON.stringify(data));
-    localStorage.setItem('teacherEmail', data.email);
-    return true;
+    // Data now has { message: 'OTP sent...', email }
+    return { success: true, email: data.email };
   } catch (error) {
     console.error('Error verifying credentials:', error.message);
+    throw error;
+  }
+};
+
+// New: Verify OTP to complete login
+export const verifyOTP = async (email, otp) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/verify-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, otp })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Invalid OTP');
+    }
+
+    const data = await response.json();
+    // Data has { message, token, teacher }
+    localStorage.setItem('teacherProfile', JSON.stringify(data.teacher));
+    localStorage.setItem('teacherToken', data.token);
+    localStorage.setItem('teacherEmail', data.teacher.email);
+    return true;
+  } catch (error) {
+    console.error('Error verifying OTP:', error.message);
     throw error;
   }
 };

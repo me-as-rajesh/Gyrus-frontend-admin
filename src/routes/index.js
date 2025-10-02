@@ -36,6 +36,7 @@ const AdminReports = lazy(() => import('../pages/adminreports/AdminReports'));
 const OtpInput = lazy(() => import('../pages/otpInput/OtpInput'));
 const NotFound = lazy(() => import('../pages/notfound/NotFound'));
 const TimerScreen = lazy(() => import('../pages/timerscreen/TimerScreen'));
+const EmailVerify = lazy(() => import('../pages/emailverify/EmailVerify'));
 
 const routes = [
   // ---------- Teacher & Group Routes ----------
@@ -74,6 +75,7 @@ const routes = [
   { path: '/otp', element: <OtpInput />, protected: false },
   { path: '/404', element: <NotFound />, protected: false },
   { path: '/timer', element: <TimerScreen />, protected: false },
+  { path: '/email-verify', element: <EmailVerify />, protected: false },
 ];
 
 export default routes;
