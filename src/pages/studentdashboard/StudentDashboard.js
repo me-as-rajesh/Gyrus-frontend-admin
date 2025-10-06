@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { clearStudentSession } from '../../services/studentService'; 
 import styles from './StudentDashboard.module.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
 const StudentDashboard = () => {
     const [studentData, setStudentData] = useState(null);

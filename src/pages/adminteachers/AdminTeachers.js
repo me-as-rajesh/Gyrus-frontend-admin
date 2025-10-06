@@ -3,7 +3,7 @@ import { getPendingJoinRequests, updateJoinRequestStatus, deleteTeacherProfile }
 import { Search } from 'lucide-react';
 import styles from './AdminTeachers.module.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
 // Utility function to generate a consistent random color based on email
 const getRandomColor = (email) => {

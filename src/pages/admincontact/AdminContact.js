@@ -19,7 +19,7 @@ const AdminContact = () => {
     e.preventDefault();
     setStatus('Sending...');
     try {
-      const response = await fetch("http://localhost:5000/api/fetch/contact-admin", {
+      const response = await fetch("https://gyrus-backend-admin.onrender.com/api/fetch/contact-admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

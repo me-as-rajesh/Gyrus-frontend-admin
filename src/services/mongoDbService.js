@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api/teachers';
+const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com/api/teachers';
 
 // Save teacher profile join request to MongoDB via Express backend
 export const saveTeacherJoinRequest = async (teacherData) => {
