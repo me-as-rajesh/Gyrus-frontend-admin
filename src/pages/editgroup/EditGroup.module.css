@@ -83,7 +83,21 @@
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
+
+input[type="email"].formInput {
+  border: 2px solid #b3d4fc;
+}
+
+input[type="date"].formInput {
+  border: 2px solid #fcd4b3;
+}
+
+select.formInput {
+  border: 2px solid #d4fcb3;
+}
+
 
 .formInput:focus {
   outline: none;
@@ -155,6 +169,7 @@
 .studentList {
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
   gap: 12px;
   margin-top: 16px;
 }
@@ -163,6 +178,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .deleteStudentButton {
@@ -266,7 +282,7 @@
 .modalForm {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
 }
 
 .modalButtons {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
 
-const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';//new line
+const API_BASE_URL = 'http://localhost:5000';//new line
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({

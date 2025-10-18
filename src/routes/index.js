@@ -6,6 +6,7 @@ const Signin = lazy(() => import('../pages/signin/Signin'));
 const TestSchedule = lazy(() => import('../pages/testschedule/TestSchedule'));
 const EditProfile = lazy(() => import('../pages/EditProfile/EditProfile'));
 const Profile = lazy(() => import('../pages/teacherprofile/profile'));
+const Table = lazy(() => import('../pages/table/Table'));
 
 const ReviewPage = lazy(() => import('../pages/reviewpage/ReviewPage'));
 
@@ -51,6 +52,9 @@ const routes = [
   { path: '/info/:id', element: <Groupinfo />, protected: false },
   { path: '/edit-group/:id', element: <EditGroup />, protected: false },
   { path: '/review-page', element: <ReviewPage />, protected: false },
+  { path: '/table', element: <Table />, protected: false },
+  { path: '/email-verify', element: <EmailVerify />, protected: false },
+
 
   // ---------- Auth Routes ----------
   { path: '/signup', element: <Signup />, protected: false },
@@ -75,7 +79,6 @@ const routes = [
   { path: '/otp', element: <OtpInput />, protected: false },
   { path: '/404', element: <NotFound />, protected: false },
   { path: '/timer', element: <TimerScreen />, protected: false },
-  { path: '/email-verify', element: <EmailVerify />, protected: false },
 ];
 
 export default routes;

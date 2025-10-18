@@ -1,0 +1,546 @@
+/* Clean, Functional Table Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Main container that fits the screen */
+.table-container {
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.table-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Controls section */
+.controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.controls input {
+  flex: 1;
+  min-width: 250px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.controls input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.controls select {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.controls select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Table wrapper that takes remaining space */
+.table-wrapper {
+  flex: 1;
+  overflow: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+/* Table styles - Auto layout allows columns to stretch based on content */
+.questions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+  min-width: 1200px;
+}
+
+.questions-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.questions-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  vertical-align: top;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.questions-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Column-specific minimum widths to prevent excessive shrinking while allowing expansion */
+.questions-table th:nth-child(1), /* Quick View */
+.questions-table td:nth-child(1) {
+  min-width: 80px;
+  width: 80px;
+}
+
+.questions-table th:nth-child(2), /* SI.NO. */
+.questions-table td:nth-child(2) {
+  min-width: 60px;
+  width: 60px;
+}
+
+.questions-table th:nth-child(3), /* MCQ ID */
+.questions-table td:nth-child(3) {
+  min-width: 100px;
+  width: 100px;
+}
+
+.questions-table th:nth-child(4), /* Question */
+.questions-table td:nth-child(4) {
+  min-width: 200px;
+}
+
+.questions-table th:nth-child(5), /* Option 1 */
+.questions-table th:nth-child(6), /* Option 2 */
+.questions-table th:nth-child(7), /* Option 3 */
+.questions-table th:nth-child(8), /* Option 4 */
+.questions-table td:nth-child(5),
+.questions-table td:nth-child(6),
+.questions-table td:nth-child(7),
+.questions-table td:nth-child(8) {
+  min-width: 120px;
+}
+
+.questions-table th:nth-child(9), /* Answer */
+.questions-table td:nth-child(9) {
+  min-width: 60px;
+  width: 60px;
+}
+
+.questions-table th:nth-child(10), /* Explanation */
+.questions-table td:nth-child(10) {
+  min-width: 150px;
+}
+
+.questions-table th:nth-child(11), /* Subject */
+.questions-table td:nth-child(11) {
+  min-width: 80px;
+  width: 100px;
+}
+
+.questions-table th:nth-child(12), /* Standard */
+.questions-table td:nth-child(12) {
+  min-width: 70px;
+  width: 80px;
+}
+
+/* Quick view button */
+.quick-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.quick-btn:hover {
+  background: #0056b3;
+}
+
+/* Pagination at bottom */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination-ellipsis {
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Modal overlay - covers entire screen */
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000 !important;
+  padding: 20px !important;
+}
+
+/* Modal content */
+.card-modal {
+  position: relative !important;
+  background: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  max-width: 800px !important;
+  max-height: 90vh !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+}
+
+.card {
+  padding: 25px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.card h2 {
+  margin: 0 0 20px 0;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  background-color: #007bff;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+  background: #c82333;
+}
+
+/* General card text styling */
+.card p, .card div {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.card strong {
+  color: #495057;
+}
+
+.card ol {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.card li {
+  margin-bottom: 8px;
+}
+
+/* Enhanced option card styling */
+.option-card {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+}
+
+.option-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.option-card.correct {
+  border-color: #28a745;
+}
+
+.option-card.correct::after {
+  content: '✔';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: #28a745;
+  font-size: 16px;
+  animation: bounceIn 0.5s ease;
+}
+
+.optionMove {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.option-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: #495057;
+  margin-right: 10px;
+  min-width: 30px;
+  text-align: center;
+}
+
+.option-text {
+  flex-grow: 1;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.section-wrapper {
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Nested tables in content */
+.nested-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.nested-table th,
+.nested-table td {
+  border: 1px solid #dee2e6;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.nested-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+/* Images in table */
+.table-image {
+  max-width: 100px;
+  height: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin: 2px 0;
+}
+
+/* Loading and error states */
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #6c757d;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin: 20px;
+}
+
+/* Search button styles */
+.search-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Animation for correct answer checkmark */
+@keyframes bounceIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .table-container {
+    padding: 10px;
+  }
+  
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .controls input,
+  .controls select {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .questions-table {
+    font-size: 12px;
+  }
+  
+  .questions-table th,
+  .questions-table td {
+    padding: 8px 4px;
+  }
+  
+  .card-modal {
+    max-width: 95% !important;
+    margin: 10px !important;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  .option-card {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .pagination button {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container h2 {
+    font-size: 18px;
+  }
+  
+  .questions-table {
+    font-size: 11px;
+  }
+  
+  .questions-table th,
+  .questions-table td {
+    padding: 6px 3px;
+  }
+  
+  .card h2 {
+    font-size: 18px;
+  }
+  
+  .option-card {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .option-number {
+    font-size: 12px;
+    min-width: 25px;
+  }
+}

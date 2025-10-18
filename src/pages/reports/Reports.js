@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, X } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import styles from './Report.module.css';
 
 const Reports = () => {
@@ -9,79 +8,62 @@ const Reports = () => {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+    const API_BASE_URL = 'http://localhost:5000';
 
-    // Calculate grade based on score
-    const calculateGrade = (score) => {
-        if (score >= 90) return 'A+';
-        if (score >= 80) return 'A';
-        if (score >= 70) return 'B+';
-        if (score >= 60) return 'B';
-        if (score >= 50) return 'C';
-        return 'F';
-    };
-
-    // Calculate pie chart data based on average scores for the active group
-    const getPieData = () => {
-        if (!activeGroup) return [];
-        const groupData = groups.filter(g => g.group === activeGroup);
-        if (groupData.length === 0) return [];
-
-        const subjects = ['physics', 'chemistry', 'zoology', 'botany'];
-        return subjects.map(subject => {
-            // Filter valid students with results
-            const validStudents = groupData[0].students.filter(
-                student => student.results && typeof student.results[subject] === 'number'
-            );
-            if (validStudents.length === 0) {
-                return { name: subject.charAt(0).toUpperCase() + subject.slice(1), value: 0 };
-            }
-            const totalScore = validStudents.reduce((sum, student) => sum + (student.results[subject] || 0), 0);
-            const averageScore = totalScore / validStudents.length;
-            return { name: subject.charAt(0).toUpperCase() + subject.slice(1), value: Math.round(averageScore) };
-        });
-    };
-
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    // (Optional) Add charts here later
 
     useEffect(() => {
         const fetchReports = async () => {
             try {
                 setLoading(true);
                 const teacherData = JSON.parse(localStorage.getItem('teacherProfile'));
-                // if (!teacherData?.email || teacherData.email !== 'arun@gmail.com') {
-                //     throw new Error('Invalid or unauthorized teacher email');
-                // }
-
-                const response = await fetch(`${API_BASE_URL}/api/reports/${teacherData.email}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch reports');
+                if (!teacherData || !teacherData.email) {
+                    setError('Teacher profile not found.');
+                    setLoading(false);
+                    return;
                 }
+                const response = await fetch(`${API_BASE_URL}/api/reports/teacher/${encodeURIComponent(teacherData.email)}`);
                 const data = await response.json();
 
-                // Group data by group name, filter out invalid entries
-                const groupedData = data.reduce((acc, item) => {
-                    // Skip entries with missing or invalid results
-                    if (!item.group || !item.student || !item.results || typeof item.results !== 'object') {
+                // If backend returns { status, count, reports } format
+                let reportsArr = Array.isArray(data) ? data : (data.reports || []);
+                if (!Array.isArray(reportsArr) || reportsArr.length === 0) {
+                    setGroups([]);
+                    setActiveGroup(null);
+                    setError(null);
+                    setLoading(false);
+                    return;
+                }
+
+                // Group by group name
+                const groupedData = reportsArr.reduce((acc, item) => {
+                    const groupName = item.groupName || item.group;
+                    const studentName = item.studentName || item.student;
+                    if (!groupName || !studentName || typeof item.score !== 'number') {
                         console.warn('Skipping invalid entry:', item);
                         return acc;
                     }
-
-                    const group = acc.find(g => g.group === item.group);
+                    const studentObj = {
+                        _id: item._id,
+                        name: studentName,
+                        score: item.score,
+                        totalQuestions: item.totalQuestions,
+                        answers: item.answers,
+                        testName: item.testName,
+                        subject: item.subject,
+                        standard: item.standard,
+                        timeTaken: item.timeTaken,
+                        date: item.date,
+                        teacherEmail: item.teacherEmail,
+                        studentEmail: item.studentEmail
+                    };
+                    const group = acc.find(g => g.group === groupName);
                     if (group) {
-                        group.students.push({
-                            _id: item._id,
-                            name: item.student,
-                            results: item.results
-                        });
+                        group.students.push(studentObj);
                     } else {
                         acc.push({
-                            group: item.group,
-                            students: [{
-                                _id: item._id,
-                                name: item.student,
-                                results: item.results
-                            }]
+                            group: groupName,
+                            students: [studentObj]
                         });
                     }
                     return acc;
@@ -91,6 +73,7 @@ const Reports = () => {
                 if (groupedData.length > 0) {
                     setActiveGroup(groupedData[0].group);
                 }
+                setError(null);
             } catch (err) {
                 setError(err.message);
                 console.error('Error fetching reports:', err);
@@ -98,7 +81,6 @@ const Reports = () => {
                 setLoading(false);
             }
         };
-
         fetchReports();
     }, []);
 
@@ -137,10 +119,14 @@ const Reports = () => {
         );
     }
 
-    if (groups.length === 0) {
+    // Only show 'No reports found' if not loading, not error, and groups is empty
+    if (!loading && !error && groups.length === 0) {
         return (
             <div className={styles.container}>
-                <div className={styles.noGroups}>No groups found</div>
+                <div className={styles.noReportsFound}>
+                    <h2>No reports found for this teacher.</h2>
+                    <p>Please check back later or contact admin.</p>
+                </div>
             </div>
         );
     }
@@ -150,7 +136,7 @@ const Reports = () => {
             <div className={styles.header}>
                 <h1 className={styles.title}>Reports</h1>
             </div>
-            
+
             <div className={styles.groupSelectorContainer}>
                 <div className={styles.customDropdown}>
                     <select
@@ -169,32 +155,6 @@ const Reports = () => {
             </div>
 
             <div className={styles.reportContent}>
-                <div className={styles.pieChartContainer}>
-                    <h2 className={styles.sectionTitle}>
-                        {activeGroup || 'Select a group'}
-                    </h2>
-                    <div className={styles.chartWrapper}>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={getPieData()}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    outerRadius={80}
-                                    fill="#8884d8"
-                                    dataKey="value"
-                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                >
-                                    {getPieData().map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
                 <div className={styles.studentList}>
                     <h2 className={styles.sectionTitle}>Students</h2>
                     <div className={styles.studentTable}>
@@ -202,11 +162,12 @@ const Reports = () => {
                             getActiveGroupStudents().map(student => (
                                 <div key={student._id} className={styles.studentRow}>
                                     <div className={styles.studentName}>{student.name}</div>
-                                    <button 
+                                    <div className={styles.studentScore}>Score: {student.score}/{student.totalQuestions}</div>
+                                    <button
                                         onClick={() => handleViewResult(student)}
                                         className={styles.resultButton}
                                     >
-                                        Result
+                                        Details
                                     </button>
                                 </div>
                             ))
@@ -219,24 +180,69 @@ const Reports = () => {
 
             {/* Result Modal */}
             {selectedStudent && (
-                <div className={styles.resultModal}>
-                    <div className={styles.resultModalContent}>
+                <div className={styles.resultModal} onClick={closeResultView}>
+                    <div className={styles.resultModalContent} onClick={(e) => e.stopPropagation()}>
                         <button onClick={closeResultView} className={styles.closeButton}>
-                            <X size={20} />
+                            <X size={24} />
                         </button>
-                        <h2 className={styles.studentName}>{selectedStudent.name}</h2>
-                        <p className={styles.groupName}>
-                            Group: {activeGroup || 'N/A'}
-                        </p>
                         
-                        <div className={styles.resultDetails}>
-                            {selectedStudent.results && Object.entries(selectedStudent.results).map(([subject, score]) => (
-                                <div key={subject} className={styles.resultCard}>
-                                    <h3>{subject.charAt(0).toUpperCase() + subject.slice(1)}</h3>
-                                    <p>Score: {score}/100</p>
-                                    <p>Grade: {calculateGrade(score)}</p>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalStudentName}>{selectedStudent.name}</h2>
+                            <p className={styles.modalGroupName}>
+                                Report for {selectedStudent.testName}
+                            </p>
+                        </div>
+
+                        <div className={styles.modalBody}>
+                            <div className={styles.mainStats}>
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>Score</span>
+                                    <span className={styles.statValue}>
+                                        {selectedStudent.score} / {selectedStudent.totalQuestions}
+                                    </span>
                                 </div>
-                            ))}
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>Percentage</span>
+                                    <span className={styles.statValue}>
+                                        {Math.round((selectedStudent.score / selectedStudent.totalQuestions) * 100)}%
+                                    </span>
+                                </div>
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>Time Taken</span>
+                                    <span className={styles.statValue}>{selectedStudent.timeTaken}s</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.detailGrid}>
+                                <p><strong>Student:</strong> {selectedStudent.name} {selectedStudent.studentEmail ? `(${selectedStudent.studentEmail})` : ''}</p>
+                                <p><strong>Group:</strong> {activeGroup || 'N/A'}</p>
+                                <p><strong>Subject:</strong> {selectedStudent.subject}</p>
+                                <p><strong>Standard:</strong> {selectedStudent.standard}</p>
+                                <p><strong>Date:</strong> {selectedStudent.date ? new Date(selectedStudent.date).toLocaleDateString() : 'N/A'}</p>
+                                <p><strong>Teacher:</strong> {selectedStudent.teacherEmail || 'Unknown'}</p>
+                            </div>
+
+                            <div className={styles.answersSection}>
+                                <h3 className={styles.answersTitle}>Answers</h3>
+                                {Array.isArray(selectedStudent.answers) ? (
+                                    <div className={styles.answersGrid}>
+                                        {selectedStudent.answers.map((a, idx) => (
+                                            <div key={idx} className={`${styles.answerCard} ${a.isCorrect ? styles.correct : styles.incorrect}`}>
+                                                <div className={styles.answerQNo}>Q{a.qNo}</div>
+                                                <div className={styles.answerBody}>
+                                                    <p><strong>Selected:</strong> {a.selected ?? '-'}</p>
+                                                    {!a.isCorrect && <p><strong>Correct:</strong> {a.correct ?? '-'}</p>}
+                                                </div>
+                                                <div className={styles.answerStatusIcon}>
+                                                    {a.isCorrect ? '✔' : '✖'}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <pre>{JSON.stringify(selectedStudent.answers, null, 2)}</pre>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

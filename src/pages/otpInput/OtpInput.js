@@ -110,7 +110,7 @@ const OtpInput = () => {
           </div>
           <button className={styles.verifyButton} onClick={handleVerifyOtp}>Verify OTP</button>
           <div className={styles.resendOtp}>
-            Didn't receive the OTP? <a href="#" onClick={handleResendOtp}>Resend OTP</a>
+            Didn't receive the OTP? <button type="button" className={styles.resendOtpLink} onClick={handleResendOtp}>Resend OTP</button>
           </div>
           {error && <p className={styles.error}>{error}</p>}
         </>

@@ -164,15 +164,20 @@ const Signup = () => {
             <BookOpen size={18} className={styles.inputIcon} />
             Department:
           </label>
-          <input
-            type="text"
+          <select
             id="department"
             name="department"
             value={teacherData.department}
             onChange={handleInputChange}
-            placeholder="Enter your department"
             required
-          />
+            className={styles.selectField}
+          >
+            <option value="">Select department</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Zoology">Zoology</option>
+            <option value="Botany">Botany</option>
+          </select>
         </div>
 
         <div className={styles.formGroup}>

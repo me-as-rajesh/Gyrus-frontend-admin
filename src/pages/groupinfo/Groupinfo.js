@@ -13,7 +13,7 @@ const GroupPage = () => {
   const [group, setGroup] = useState(location.state?.groupData || null);
   const [loading, setLoading] = useState(!location.state?.groupData);
   const [error, setError] = useState(null);
-  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+  const API_BASE_URL = 'http://localhost:5000';
 
   useEffect(() => {
     if (location.state?.groupData) return;
@@ -68,9 +68,9 @@ const GroupPage = () => {
           <div className={styles.pageWrapper}>
             <div className={styles.pageContainer}>
               <div className={styles.header}>
-                <button onClick={() => navigate(-1)} className={styles.backButton}>
+                {/* <button onClick={() => navigate(-1)} className={styles.backButton}>
                   ← Back to Groups
-                </button>
+                </button> */}
                 <h1>{group.groupName} (Section {group.section})</h1>
                 <button
                   onClick={() => navigate(`/edit-group/${id}`, { state: { groupData: group } })}
@@ -90,7 +90,14 @@ const GroupPage = () => {
                 {group.students?.length > 0 ? (
                   <div className={styles.studentsGrid}>
                     {group.students.map((student, index) => (
-                      <StudentCard key={student.regNo || index} name={student.name} regNo={student.regNo} />
+                      <StudentCard
+                        key={student.regNo || index}
+                        name={student.name}
+                        regNo={student.regNo}
+                        email={student.email}
+                        gender={student.gender}
+                        dob={student.dob}
+                      />
                     ))}
                   </div>
                 ) : (
@@ -131,10 +138,13 @@ const StatCard = ({ title, value }) => (
   </div>
 );
 
-const StudentCard = ({ name, regNo }) => (
+const StudentCard = ({ name, regNo, email, gender, dob }) => (
   <div className={styles.studentCard}>
     <span className={styles.name}>{name}</span>
     <span className={styles.regNo}>{regNo}</span>
+    <span className={styles.email}>Email: {email}</span>
+    <span className={styles.gender}>Gender: {gender}</span>
+    <span className={styles.dob}>DOB: {dob ? new Date(dob).toLocaleDateString() : '-'}</span>
   </div>
 );
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, PlusCircle, X } from 'lucide-react';
+import {  PlusCircle, X } from 'lucide-react';
 import styles from './TestSchedule.module.css';
 
 const TestSchedule = () => {
@@ -11,19 +10,30 @@ const TestSchedule = () => {
     const [tests, setTests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+    const API_BASE_URL = 'http://localhost:5000';
 
     const [formData, setFormData] = useState({
         testName: '',
         date: '',
         time: '',
-        subject: 'All Subjects',
+        subject: 'NEET',
         mcqCount: 20,
         groupId: ''
     });
 
-    const subjects = ['All Subjects', 'Physics', 'Chemistry', 'Botany', 'Zoology'];
-    const mcqOptions = [20, 80, 100, "180 (NEET Pattern)"];
+    // For completion status popup
+    const [showCompletionPopup, setShowCompletionPopup] = useState(false);
+    const [completionData, setCompletionData] = useState(null);
+    const [popupTest, setPopupTest] = useState(null);
+
+    const subjects = ['NEET', 'Physics', 'Chemistry', 'Botany', 'Zoology'];
+    const getMcqOptions = (subject) => {
+        if (subject === 'NEET') {
+            return [20, 40, 100, 180];
+        } else {
+            return [20, 40];
+        }
+    };
 
     useEffect(() => {
         const fetchTeacherGroups = async () => {
@@ -100,6 +110,11 @@ const TestSchedule = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Get selected group object
+            const selectedGroup = groups.find(g => g._id === (formData.groupId || activeGroup));
+            const numericClass = selectedGroup?.class || '';
+            const standard = numericClass === '11' ? 'XI' : (numericClass === '12' ? 'XII' : numericClass);
+
             const response = await fetch(`${API_BASE_URL}/api/tests`, {
                 method: 'POST',
                 headers: {
@@ -107,7 +122,9 @@ const TestSchedule = () => {
                 },
                 body: JSON.stringify({
                     ...formData,
-                    groupId: activeGroup
+                    groupId: formData.groupId || activeGroup,
+                    standard,
+                    class: numericClass
                 })
             });
 
@@ -120,7 +137,7 @@ const TestSchedule = () => {
                 testName: '',
                 date: '',
                 time: '',
-                subject: 'All Subjects',
+                subject: 'NEET',
                 mcqCount: 20,
                 groupId: ''
             });
@@ -205,14 +222,96 @@ const TestSchedule = () => {
                                 </div>
                                 <div className={styles.testMcq}>{test.mcqCount}</div>
                                 <div className={styles.testActions}>
-                                    <button className={styles.detailsButton}>Details</button>
-                                    <button className={styles.attendButton}>Attend Students</button>
+                                    <button
+                                        className={styles.detailsButton}
+                                        onClick={async () => {
+                                            setPopupTest(test);
+                                            setShowCompletionPopup(true);
+                                            setCompletionData(null);
+                                            try {
+                                                const res = await fetch(`${API_BASE_URL}/api/reports/group/${activeGroup}/test/${encodeURIComponent(test.testName)}/completion-status`);
+                                                if (!res.ok) throw new Error('Failed to fetch completion status');
+                                                const data = await res.json();
+                                                setCompletionData(data);
+                                            } catch (err) {
+                                                setCompletionData({ error: err.message });
+                                            }
+                                        }}
+                                        onMouseOver={async () => {
+                                            // Optionally prefetch on hover
+                                            if (!completionData || popupTest?._id !== test._id) {
+                                                try {
+                                                    const res = await fetch(`${API_BASE_URL}/api/reports/group/${activeGroup}/test/${encodeURIComponent(test.testName)}/completion-status`);
+                                                    if (!res.ok) throw new Error('Failed to fetch completion status');
+                                                    const data = await res.json();
+                                                    setCompletionData(data);
+                                                    setPopupTest(test);
+                                                } catch (err) {
+                                                    setCompletionData({ error: err.message });
+                                                }
+                                            }
+                                        }}
+                                    >Details</button>
                                 </div>
                             </div>
                         ))
                     ) : (
                         <div className={styles.noTests}>No tests scheduled for this group</div>
                     )}
+                </div>
+            )}
+
+            {/* Completion Status Popup */}
+            {showCompletionPopup && (
+                <div className={styles.dialogBackdrop} onClick={() => setShowCompletionPopup(false)}>
+                    <div className={styles.dialog} onClick={e => e.stopPropagation()}>
+                        <button onClick={() => setShowCompletionPopup(false)} className={styles.closeButton}>
+                            <X size={20} />
+                        </button>
+                        <h2 className={styles.dialogTitle}>Test Completion Status</h2>
+                        {completionData ? (
+                            completionData.error ? (
+                                <div className={styles.error}>{completionData.error}</div>
+                            ) : (
+                                <div>
+                                    <div className={styles.completionStatsCards}>
+                                        <div className={styles.statCard}>
+                                            <span className={styles.statLabel}>Total Students</span>
+                                            <span className={styles.statValue}>{completionData.totalStudents}</span>
+                                        </div>
+                                        <div className={styles.statCard + ' ' + styles.finishedCard}>
+                                            <span className={styles.statLabel}>Finished</span>
+                                            <span className={styles.statValue}>{completionData.finishedCount}</span>
+                                        </div>
+                                        <div className={styles.statCard + ' ' + styles.notFinishedCard}>
+                                            <span className={styles.statLabel}>Not Finished</span>
+                                            <span className={styles.statValue}>{completionData.notFinishedCount}</span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.completionListsCards}>
+                                        <div className={styles.listCard + ' ' + styles.finishedListCard}>
+                                            <div className={styles.listTitle}>Finished Students</div>
+                                            <ul className={styles.studentListUl}>
+                                                {completionData.finished.length > 0 ? completionData.finished.map((s, idx) => (
+                                                    <li key={idx} className={styles.studentListItem}><span className={styles.studentName}>{s.name}</span> <span className={styles.studentEmail}>({s.email})</span></li>
+                                                )) : <li className={styles.studentListItem}>None</li>}
+                                            </ul>
+                                        </div>
+                                        <div className={styles.listCard + ' ' + styles.notFinishedListCard}>
+                                            <div className={styles.listTitle}>Not Finished Students</div>
+                                            <ul className={styles.studentListUl}>
+                                                {completionData.notFinished.length > 0 ? completionData.notFinished.map((s, idx) => (
+                                                    <li key={idx} className={styles.studentListItem}><span className={styles.studentName}>{s.name}</span> <span className={styles.studentEmail}>({s.email})</span></li>
+                                                )) : <li className={styles.studentListItem}>None</li>}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        ) : (
+                            <div className={styles.loading}>Loading...</div>
+                        )}
+                    </div>
                 </div>
             )}
 
@@ -303,7 +402,7 @@ const TestSchedule = () => {
                                         onChange={handleInputChange}
                                         className={styles.selectField}
                                     >
-                                        {mcqOptions.map((count, index) => (
+                                        {getMcqOptions(formData.subject).map((count, index) => (
                                             <option key={index} value={count}>
                                                 {count}
                                             </option>

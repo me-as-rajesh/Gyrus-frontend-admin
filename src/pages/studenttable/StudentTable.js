@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import styles from './StudentTable.module.css';
 
 const StudentTable = () => {
@@ -8,7 +7,7 @@ const StudentTable = () => {
     const [activeGroup, setActiveGroup] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+    const API_BASE_URL = 'http://localhost:5000';
 
     useEffect(() => {
         const fetchTeacherGroups = async () => {
@@ -174,7 +173,7 @@ const StudentTable = () => {
                         </thead>
                         <tbody>
                             {getActiveGroupStudents().map((student, idx) => (
-                                <tr key={student._id || student.registerNo}>
+                                <tr key={student._id || student.registerNo || student.regNo || idx}>
                                     <td>{idx + 1}</td>
                                     <td>{student.name}</td>
                                     <td>{student.registerNo || student.regNo}</td>

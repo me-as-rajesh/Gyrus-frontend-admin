@@ -125,30 +125,18 @@
 
 .detailsButton {
   padding: 6px 12px;
-  background-color: #f8f9fa;
+  background-color: #3498db;
   border: 1px solid #e0e0e0;
+  color: white;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .detailsButton:hover {
-  background-color: #e9ecef;
-}
-
-.attendButton {
-  padding: 6px 12px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.attendButton:hover {
   background-color: #2980b9;
 }
+
 
 .tabsContainer {
   display: flex;
@@ -224,6 +212,84 @@
   max-width: 600px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   position: relative;
+}
+
+.completionStatsCards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+.statCard {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.statLabel {
+  font-size: 13px;
+  color: #7f8c8d;
+  display: block;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.statValue {
+  font-size: 22px;
+  font-weight: 600;
+}
+.finishedCard {
+  border-left: 4px solid #27ae60;
+}
+.notFinishedCard {
+  border-left: 4px solid #e74c3c;
+}
+
+.completionListsCards {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.listCard {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px 18px;
+  min-width: 220px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.finishedListCard {
+  border-top: 3px solid #27ae60;
+}
+.notFinishedListCard {
+  border-top: 3px solid #e74c3c;
+}
+.listTitle {
+  font-size: 15px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+.studentListUl {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.studentListItem {
+  font-size: 14px;
+  color: #34495e;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+}
+.studentName {
+  font-weight: 500;
+  color: #2c3e50;
+}
+.studentEmail {
+  color: #7f8c8d;
+  margin-left: 6px;
 }
 
 .closeButton {

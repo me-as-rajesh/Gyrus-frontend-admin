@@ -162,6 +162,26 @@
   animation: fadeIn 0.5s;
 }
 
+.selectField {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  background-color: #fff;
+  color: #34495e;
+}
+
+.selectField:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.selectField:disabled {
+  background-color: #f5f7fa;
+  color: #7f8c8d;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

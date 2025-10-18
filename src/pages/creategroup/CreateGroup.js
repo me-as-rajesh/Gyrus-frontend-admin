@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Edit2, Trash2, Check, Upload, Download } from 'lucide-react';
+import { Check, Upload, Download } from 'lucide-react';
 import axios from 'axios';
 import styles from './CreateGroup.module.css';
 import Papa from 'papaparse';
@@ -12,11 +12,11 @@ const CreateGroup = () => {
   const [section, setSection] = useState('A');
   const [studentCount, setStudentCount] = useState(1);
   const [students, setStudents] = useState([{ name: '', regNo: '', email: '', gender: '', dob: '' }]);
-  const [isCreated, setIsCreated] = useState(false);
-  const [createdGroup, setCreatedGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [createdGroup, setCreatedGroup] = useState(null);
+  const [isCreated, setIsCreated] = useState(false);
 
   const classOptions = ['11', '12'];
   const sectionOptions = Array.from({length: 26}, (_, i) => String.fromCharCode(65 + i));
@@ -24,7 +24,7 @@ const CreateGroup = () => {
   const maxStudents = 100;
   const minStudents = 1;
 
-  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+  const API_BASE_URL = 'http://localhost:5000';
   const getTeacherData = () => {
     const teacher = JSON.parse(localStorage.getItem('teacherProfile'));
     if (!teacher || !teacher.email) {
@@ -262,95 +262,95 @@ const CreateGroup = () => {
               Students added: {students.filter(s => s.name && s.regNo && s.email && s.gender && s.dob).length} / {maxStudents}
             </div>
           </div>
-        </form>
-      </div>
-
-      <div className={styles.studentSection}>
-        <div className={styles.studentSectionHeader}>
-          <h3>List out number of Students</h3>
-          <div className={styles.buttonGroup}>
-            <label className={styles.importButton}>
-              <Upload size={18} /> Import CSV
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleImportCSV}
-                style={{ display: 'none' }}
-              />
-            </label>
-            <button
-              type="button"
-              className={styles.exportButton}
-              onClick={handleExportCSV}
-            >
-              <Download size={18} /> Export CSV
-            </button>
-          </div>
-        </div>
-        <div className={styles.studentList}>
-          {students.map((student, index) => (
-            <div key={index} className={styles.studentRow}>
-              <div className={styles.studentNumber}>{index + 1}.</div>
-              <div className={styles.studentInputs}>
-                <div className={styles.formGroup}>
+          {/* Move student section and submit button inside the form */}
+          <div className={styles.studentSection}>
+            <div className={styles.studentSectionHeader}>
+              <h3>List out number of Students</h3>
+              <div className={styles.buttonGroup}>
+                <label className={styles.importButton}>
+                  <Upload size={18} /> Import CSV
                   <input
-                    type="text"
-                    placeholder="Student Name"
-                    value={student.name}
-                    onChange={(e) => handleStudentChange(index, 'name', e.target.value)}
-                    required
+                    type="file"
+                    accept=".csv"
+                    onChange={handleImportCSV}
+                    style={{ display: 'none' }}
                   />
-                </div>
-                <div className={styles.formGroup}>
-                  <input
-                    type="text"
-                    placeholder="Register No"
-                    value={student.regNo}
-                    onChange={(e) => handleStudentChange(index, 'regNo', e.target.value)}
-                    required
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={student.email}
-                    onChange={(e) => handleStudentChange(index, 'email', e.target.value)}
-                    required
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <select
-                    value={student.gender}
-                    onChange={(e) => handleStudentChange(index, 'gender', e.target.value)}
-                    required
-                  >
-                    <option value="" disabled>Select Gender</option>
-                    {genderOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className={styles.formGroup}>
-                  <input
-                    type="date"
-                    placeholder="Date of Birth"
-                    value={student.dob}
-                    onChange={(e) => handleStudentChange(index, 'dob', e.target.value)}
-                    required
-                  />
-                </div>
+                </label>
+                <button
+                  type="button"
+                  className={styles.exportButton}
+                  onClick={handleExportCSV}
+                >
+                  <Download size={18} /> Export CSV
+                </button>
               </div>
             </div>
-          ))}
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={isLoading}
-          >
-            <Check size={18} /> {isLoading ? 'Creating...' : 'Create now'}
-          </button>
-        </div>
+            <div className={styles.studentList}>
+              {students.map((student, index) => (
+                <div key={index} className={styles.studentRow}>
+                  <div className={styles.studentNumber}>{index + 1}.</div>
+                  <div className={styles.studentInputs}>
+                    <div className={styles.formGroup}>
+                      <input
+                        type="text"
+                        placeholder="Student Name"
+                        value={student.name}
+                        onChange={(e) => handleStudentChange(index, 'name', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <input
+                        type="text"
+                        placeholder="Register No"
+                        value={student.regNo}
+                        onChange={(e) => handleStudentChange(index, 'regNo', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={student.email}
+                        onChange={(e) => handleStudentChange(index, 'email', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <select
+                        value={student.gender}
+                        onChange={(e) => handleStudentChange(index, 'gender', e.target.value)}
+                        required
+                      >
+                        <option value="" disabled>Select Gender</option>
+                        {genderOptions.map(option => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className={styles.formGroup}>
+                      <input
+                        type="date"
+                        placeholder="Date of Birth"
+                        value={student.dob}
+                        onChange={(e) => handleStudentChange(index, 'dob', e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={isLoading}
+            >
+              <Check size={18} /> {isLoading ? 'Creating...' : 'Create now'}
+            </button>
+          </div>
+        </form>
       </div>
 
       {showAlert && (

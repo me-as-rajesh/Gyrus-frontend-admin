@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://gyrus-backend-admin.onrender.com/api/admin';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/admin';
 
 export const loginAdmin = async (username, password) => {
   try {

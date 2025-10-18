@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { clearStudentSession } from '../../services/studentService'; 
+import { clearStudentSession } from '../../services/studentService';
 import styles from './StudentDashboard.module.css';
 
-const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+const API_BASE_URL = 'http://localhost:5000';
 
 const StudentDashboard = () => {
     const [studentData, setStudentData] = useState(null);
@@ -82,10 +82,39 @@ const StudentDashboard = () => {
     }, [studentData]);
 
     const handleAttendTest = (test) => {
-        if (timers[test._id]?.status === 'available') {
-            navigate('/test-attend', { state: { test } });
-        }
-    };
+    if (timers[test._id]?.status === 'available') {
+        let standard = '';
+        const groupClass = studentData.group.class;
+        if (groupClass === '11') standard = 'XI';
+        else if (groupClass === '12') standard = 'XII';
+        else standard = groupClass || '';
+
+        const params = {
+            subject: test.subject,
+            count: test.mcqCount, 
+            standard
+        };
+        
+        const enrichedTest = {
+            ...test,
+            groupId: test.groupId || studentData.group._id,
+            groupName: studentData.group.name || studentData.group.groupName || '',
+            teacherEmail: studentData.teacher?.email || ''
+        };
+
+        // Send extra student details
+        navigate('/test-attend', { 
+            state: { 
+                test: enrichedTest, 
+                params, 
+                studentName: studentData.student.name,
+                studentEmail: studentData.student.email,
+                studentGender: studentData.student.gender,
+                studentDob: studentData.student.dob
+            } 
+        });
+    }
+};
 
     const handleLogout = () => {
         clearStudentSession();
@@ -102,6 +131,9 @@ const StudentDashboard = () => {
                 <div className={styles.studentInfo}>
                     <h2>Welcome, {studentData.student.name}!</h2>
                     <p>Registration Number: {studentData.student.regNo}</p>
+                    <p>Email: {studentData.student.email}</p>
+                    <p>Gender: {studentData.student.gender}</p>
+                    <p>Date of Birth: {new Date(studentData.student.dob).toLocaleDateString()}</p>
                     <p>Group: {studentData.group.name} (Section {studentData.group.section})</p>
                     <p>Teacher: {studentData.teacher.name}</p>
                 </div>
@@ -134,8 +166,8 @@ const StudentDashboard = () => {
                                     {timerInfo.status === 'expired'
                                         ? 'Test Closed'
                                         : timerInfo.status === 'upcoming'
-                                        ? 'Upcoming'
-                                        : 'Attend Test'}
+                                            ? 'Upcoming'
+                                            : 'Attend Test'}
                                 </button>
                             </div>
                         );

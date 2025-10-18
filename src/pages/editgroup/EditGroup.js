@@ -13,23 +13,25 @@ const EditGroup = () => {
   const location = useLocation();
   const [group, setGroup] = useState(location.state?.groupData || null);
   const [formData, setFormData] = useState({
-    groupName: '',
-    section: '',
-    maxStudents: 20,
-    students: [],
+  groupName: '',
+  class: '',
+  section: '',
+  maxStudents: 20,
+  students: [],
   });
-  const [newStudent, setNewStudent] = useState({ name: '', regNo: '' });
+  const [newStudent, setNewStudent] = useState({ name: '', regNo: '', email: '', gender: '', dob: '' });
   const [loading, setLoading] = useState(!location.state?.groupData);
   const [error, setError] = useState(null);
   const [submitError, setSubmitError] = useState(null);
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
   const [showDeleteStudentModal, setShowDeleteStudentModal] = useState(null);
-  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
+  const API_BASE_URL = 'http://localhost:5000';
 
   useEffect(() => {
     if (group) {
       setFormData({
         groupName: group.groupName || '',
+        class: group.class || '',
         section: group.section || '',
         maxStudents: group.maxStudents || 20,
         students: group.students || [],
@@ -46,6 +48,7 @@ const EditGroup = () => {
         setGroup(data.data);
         setFormData({
           groupName: data.data.groupName || '',
+          class: data.data.class || '',
           section: data.data.section || '',
           maxStudents: data.data.maxStudents || 20,
           students: data.data.students || [],
@@ -66,9 +69,17 @@ const EditGroup = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let newValue = value;
+    if (name === 'maxStudents') {
+      newValue = parseInt(value, 10);
+    }
+    if (name === 'section') {
+      // Only allow a single uppercase letter
+      newValue = value.replace(/[^A-Z]/g, '').slice(0, 1);
+    }
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'maxStudents' ? parseInt(value, 10) : value,
+      [name]: newValue,
     }));
   };
 
@@ -81,8 +92,8 @@ const EditGroup = () => {
   };
 
   const handleAddStudent = () => {
-    if (!newStudent.name || !newStudent.regNo) {
-      setSubmitError('Please provide both name and registration number for the new student.');
+    if (!newStudent.name || !newStudent.regNo || !newStudent.email || !newStudent.gender || !newStudent.dob) {
+      setSubmitError('Please fill all student fields.');
       return;
     }
     if (formData.students.length >= formData.maxStudents) {
@@ -91,9 +102,9 @@ const EditGroup = () => {
     }
     setFormData((prev) => ({
       ...prev,
-      students: [...prev.students, { name: newStudent.name, regNo: newStudent.regNo }],
+      students: [...prev.students, { ...newStudent }],
     }));
-    setNewStudent({ name: '', regNo: '' });
+    setNewStudent({ name: '', regNo: '', email: '', gender: '', dob: '' });
     setShowAddStudentModal(false);
   };
 
@@ -193,7 +204,19 @@ const EditGroup = () => {
                       />
                     </div>
                     <div className={styles.formGroup}>
-                      <label htmlFor="section" className={styles.formLabel}>Section</label>
+                      <label htmlFor="class" className={styles.formLabel}>Class</label>
+                      <input
+                        type="text"
+                        id="class"
+                        name="class"
+                        value={formData.class}
+                        onChange={handleInputChange}
+                        className={styles.formInput}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="section" className={styles.formLabel}>Section (A-Z)</label>
                       <input
                         type="text"
                         id="section"
@@ -201,6 +224,8 @@ const EditGroup = () => {
                         value={formData.section}
                         onChange={handleInputChange}
                         className={styles.formInput}
+                        maxLength={1}
+                        pattern="[A-Z]"
                         required
                       />
                     </div>
@@ -244,6 +269,32 @@ const EditGroup = () => {
                                 onChange={(e) => handleStudentEdit(index, 'regNo', e.target.value)}
                                 className={styles.formInput}
                                 placeholder="Registration Number"
+                              />
+                              <input
+                                type="email"
+                                value={student.email || ''}
+                                onChange={(e) => handleStudentEdit(index, 'email', e.target.value)}
+                                className={styles.formInput}
+                                placeholder="Email"
+                                required
+                              />
+                              <select
+                                value={student.gender || ''}
+                                onChange={(e) => handleStudentEdit(index, 'gender', e.target.value)}
+                                className={styles.formInput}
+                                required
+                              >
+                                <option value="">Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                              </select>
+                              <input
+                                type="date"
+                                value={student.dob || ''}
+                                onChange={(e) => handleStudentEdit(index, 'dob', e.target.value)}
+                                className={styles.formInput}
+                                required
                               />
                               <button
                                 type="button"
@@ -304,6 +355,7 @@ const EditGroup = () => {
                   onChange={handleStudentInputChange}
                   className={styles.formInput}
                   placeholder="Enter student name"
+                  required
                 />
               </div>
               <div className={styles.formGroup}>
@@ -316,6 +368,48 @@ const EditGroup = () => {
                   onChange={handleStudentInputChange}
                   className={styles.formInput}
                   placeholder="Enter registration number"
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="email" className={styles.formLabel}>Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={newStudent.email}
+                  onChange={handleStudentInputChange}
+                  className={styles.formInput}
+                  placeholder="Enter email"
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="gender" className={styles.formLabel}>Gender</label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={newStudent.gender}
+                  onChange={handleStudentInputChange}
+                  className={styles.formInput}
+                  required
+                >
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="dob" className={styles.formLabel}>Date of Birth</label>
+                <input
+                  type="date"
+                  id="dob"
+                  name="dob"
+                  value={newStudent.dob}
+                  onChange={handleStudentInputChange}
+                  className={styles.formInput}
+                  required
                 />
               </div>
             </div>
