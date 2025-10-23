@@ -80,7 +80,7 @@ export default function EmailVerify() {
     setResendTimer(60);
     // Re-call login API to resend OTP (assuming password not needed for resend; add backend /resend-otp)
     try {
-      await fetch(`http://localhost:5000/api/teachers/resend-otp`, { // Add this endpoint in backend
+      await fetch(`https://gyrus-backend-admin.onrender.com/api/teachers/resend-otp`, { // Add this endpoint in backend
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

@@ -20,7 +20,7 @@ const TestAttend = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const API_BASE_URL = 'http://localhost:5000';
+    const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
     // IMAGE SIZE used for image rendering similar to Table.js
     const IMAGE_SIZE = 120;

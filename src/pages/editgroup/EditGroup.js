@@ -25,7 +25,7 @@ const EditGroup = () => {
   const [submitError, setSubmitError] = useState(null);
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
   const [showDeleteStudentModal, setShowDeleteStudentModal] = useState(null);
-  const API_BASE_URL = 'http://localhost:5000';
+  const API_BASE_URL = 'https://gyrus-backend-admin.onrender.com';
 
   useEffect(() => {
     if (group) {

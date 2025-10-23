@@ -140,4 +140,4 @@ const StudentLogin = () => {
 
 export default StudentLogin;
 
-//http://localhost:5000/api/student/student-data/KGF/799
+//https://gyrus-backend-admin.onrender.com/api/student/student-data/KGF/799
